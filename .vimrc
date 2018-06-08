@@ -14,7 +14,7 @@ set encoding=utf-8
 set nowrap
 set mouse=c
 
-" Searching settings or shortcuts
+" Searching settings
 set hlsearch incsearch
 set ignorecase smartcase
 highlight Search cterm=NONE ctermfg=black ctermbg=gray
@@ -23,7 +23,7 @@ nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 " Selected Item color for Ommi and YouCompleteMe
 highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
 
-" Paste toggle, autoindent will affect the past mode.
+" If enable autoindent, the paste text will be indented and not neat.
 set pastetoggle=<F2>
 
 " Important, <C-c> does not trigger autocommand, but <Esc> does.
@@ -58,8 +58,7 @@ set shiftwidth=2
 set background=dark
 set t_Co=256
 
-" Folding
-" not fold when opening a new file
+" Not fold when opening a new file
 set nofoldenable
 set foldmethod=indent
 set foldlevelstart=20
@@ -74,8 +73,18 @@ inoremap <C-K> <Up>
 
 " Goto closing character
 nnoremap <Leader>q %
-nnoremap <C-h> 0
-nnoremap <C-l> $
+
+" Moving between windows
+nnoremap <C-H> <C-W><C-H>
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+
+" Change windows resize default value
+nnoremap <C-w>< <C-w>5<<CR>
+nnoremap <C-w>> <C-w>5><CR>
+nnoremap <C-w>+ <C-w>5+<CR>
+nnoremap <C-w>- <C-w>5-<CR>
 
 " Save current file
 nnoremap <Leader>s :update<CR>
@@ -156,6 +165,7 @@ nnoremap <silent> <Leader>t :TagbarToggle<CR>
 " 2 relative line number, 0 don't show linenubmer, 1 absolute linenumbers
 let g:tagbar_show_linenumbers = 2
 
+" tags for ctags
 set tags=./tags;,tags
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
