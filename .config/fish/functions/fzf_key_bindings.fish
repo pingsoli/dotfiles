@@ -1,0 +1,1 @@
+/home/pingsoli/Downloads/fzf/shell/key-bindings.fish
