@@ -23,6 +23,14 @@ nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 " Selected Item color for Ommi and YouCompleteMe
 highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
 
+" Paste toggle, autoindent will affect the past mode.
+set pastetoggle=<F2>
+
+" Important, <C-c> does not trigger autocommand, but <Esc> does.
+" If you use YouCompleteMe, use <Esc> instead <C-c>.
+" Why use double <Esc>? Avoid the delay.
+inoremap <C-c> <Esc><Esc>
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Performance options
 
@@ -36,11 +44,6 @@ augroup general
   " Resolve performance problems (memory leak)
   autocmd BufWinLeave * call clearmatches()
 augroup general
-
-" Important, <C-c> does not trigger autocommand, but <Esc> does.
-" If you use YouCompleteMe, use <Esc> instead <C-c>.
-" Why use double <Esc>? Avoid the delay.
-inoremap <C-c> <Esc><Esc>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
