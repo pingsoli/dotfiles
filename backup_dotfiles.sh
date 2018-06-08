@@ -21,9 +21,11 @@ function backup()
   set -x
 
   cp -r "$FISH_CONF"    ".config"
-  cp    "$VIM_A_PLUGIN" ".vim/plugin"
-  cp    "$VIM_CONF"     ".vim"
   cp    "$TMUX_CONF"    "."
+
+  # VIM
+  cp    "$VIM_A_PLUGIN" ".vim/plugin"
+  cp    "$VIM_CONF"     "."
   cp    "$YCM_CONF"     ".vim"
 }
 
