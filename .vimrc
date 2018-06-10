@@ -109,8 +109,12 @@ set shortmess=a
 " Reload ~/.vimrc without quit. (global source ~/.vimrc)
 nnoremap gsv :so $MYVIMRC<CR>
 
-" Disable Ex mode
+" Remap Q to nop, not enter Ex mode
 nnoremap Q <nop>
+
+" Useful when open protected file
+cmap w!! w !sudo tee % >/dev/null
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " nerdtree
@@ -252,9 +256,6 @@ function! TrimWhitespace()
 endfunction
 
 command! TrimWhitespace call TrimWhitespace()
-
-" Useful when open protected file
-cmap w!! w !sudo tee % >/dev/null
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
