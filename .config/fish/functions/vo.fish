@@ -2,7 +2,7 @@ function vo -d "vim open vim|fish|tmux|ycm conf file with horizontal layout"
   set -l openfiles
   for option in $argv
     switch $option
-      case vim
+      case vi vim
        set -l vim_conf_file ~/.vimrc
        set openfiles $openfiles $vim_conf_file
 
@@ -15,7 +15,7 @@ function vo -d "vim open vim|fish|tmux|ycm conf file with horizontal layout"
        set openfiles $openfiles $fish_conf_file
 
       case ycm
-        set -l ycm_conf_file $HOME/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py
+        set -l ycm_conf_file $HOME/.vim/.ycm_extra_conf.py
 
         if test -e "$ycm_conf_file"
           set openfiles $openfiles $ycm_conf_file

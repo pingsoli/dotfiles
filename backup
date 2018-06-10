@@ -1,10 +1,11 @@
 #!/bin/bash
 
 VIM_CONF="$HOME/.vimrc"
-VIM_A_PLUGIN="$HOME/.vim/plugin/a.vim"
+VIM_SNIPPETS="$HOME/.vim/UltiSnips"
+YCM_CONF="$HOME/.vim/.ycm_extra_conf.py"
+
 TMUX_CONF="$HOME/.tmux.conf"
 FISH_CONF="$HOME/.config/fish"
-YCM_CONF="$HOME/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"
 
 function backup()
 {
@@ -20,9 +21,12 @@ function backup()
   cp    "$TMUX_CONF"    "."
 
   # VIM
-  cp    "$VIM_A_PLUGIN" ".vim/plugin"
   cp    "$VIM_CONF"     "."
   cp    "$YCM_CONF"     ".vim"
+  cp -r "$VIM_SNIPPETS" ".vim"
+
+  # set +x not echo
+  { set +x; } 2>/dev/null
 }
 
 function push()
@@ -33,19 +37,17 @@ function push()
 }
 
 case "$1" in
-  backup)
-    backup
-    ;;
-
   push)
     if [ "$#" -ne 2 ]; then
       echo -e "no commit message\nusage: ./config.sh push <msg> [branch]"
-      exit 2
+      exit 1
     fi
     push "$2"
     ;;
 
   *)
-    echo -e $"Usage: $0 { backup | push <msg> [branch] }"
-    exit 1
+    backup
+
+    # prompt with red color
+    echo -e "\e[31mplease push all settings to remote branch: ./backup push <msg>"
 esac

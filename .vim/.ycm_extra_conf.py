@@ -20,7 +20,7 @@ flags = [
   # For a C project, you would set this to 'c' instead of 'c++'.
   '-x', 'c++',
 
-  #'-isystem', '/usr/include/c++/5.4.0',
+  '-isystem', '/usr/include/c++/5.4.0',
   #'-isystem', '/usr/include/x86_64-linux-gnu',
   #'-isystem', '/usr/local/boost/include',
   #'-isystem', '/usr/include',

@@ -14,11 +14,15 @@ set encoding=utf-8
 set nowrap
 set mouse=c
 
-" Searching settings
+" Searching and match settings
 set hlsearch incsearch
 set ignorecase smartcase
 highlight Search cterm=NONE ctermfg=black ctermbg=gray
 nnoremap <silent> <Leader><Space> :nohlsearch<CR>
+
+" Goto closing character
+nnoremap <tab> %
+
 
 " Selected Item color for Ommi and YouCompleteMe
 highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
@@ -71,9 +75,6 @@ inoremap <C-L> <Right>
 inoremap <C-J> <Down>
 inoremap <C-K> <Up>
 
-" Goto closing character
-nnoremap <Leader>q %
-
 " Moving between windows
 nnoremap <C-H> <C-W><C-H>
 nnoremap <C-J> <C-W><C-J>
@@ -88,20 +89,28 @@ nnoremap <C-w>- <C-w>5-<CR>
 
 " Save current file
 nnoremap <Leader>s :update<CR>
+" Close window
+nnoremap <Leader>x ZZ<CR>
 
 " Quick comment for CPP
 vnoremap // :s:^://<CR>
 
-" Highlight 80th line, and make it gray color
-highlight ColorColumn ctermbg=gray
+" Highlight 80th line, and make it gray color.
+highlight ColorColumn ctermbg=239
 set colorcolumn=81
 
+" Show the trail whitespace
 set list listchars=tab:\ \ ,trail:•
 
-" Show less output message in vim
+" Show less output message
 set cmdheight=1
 set shortmess=a
 
+" Reload ~/.vimrc without quit. (global source ~/.vimrc)
+nnoremap gsv :so $MYVIMRC<CR>
+
+" Disable Ex mode
+nnoremap Q <nop>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " nerdtree
@@ -236,31 +245,23 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " custom functions
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! CppMain()
-  call append("$", "int main(int argc, char *argv[])")
-  call append("$", "{")
-  call append("$", "  return 0;")
-  call append("$", "}")
-  norm 2j
-endfunction
-
 function! TrimWhitespace()
   let l:save = winsaveview()
   %s/\s\+$//e
   call winrestview(l:save)
 endfunction
 
-command! Cppmain        call CppMain()
 command! TrimWhitespace call TrimWhitespace()
 
 " Useful when open protected file
 cmap w!! w !sudo tee % >/dev/null
 
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " youcompleteme
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ycm_collect_identifiers_from_tags_files = 0
-let g:ycm_global_ycm_extra_conf="~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"
+let g:ycm_global_ycm_extra_conf="~/.vim/.ycm_extra_conf.py"
 let g:ycm_complete_in_comments=1
 let g:ycm_show_diagnostics_ui = 0
 set completeopt-=preview
@@ -272,6 +273,31 @@ let g:ycm_log_level = 'debug'
 let g:ycm_semantic_triggers = {
   \ 'c,cpp' : ['re!\w{2}'],
   \ }
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ultisnips (autocomplete some snippets)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+ let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-space>"
+
+" Don't quit insert mode, or the trigger won't take effect.
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" fswitch (swtich between .cpp and .h files)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <silent> <Leader>gg :FSHere<CR>
+nnoremap <silent> <Leader>gl :FSSplitLeft<CR>
+nnoremap <silent> <Leader>gr :FSSplitRight<CR>
+nnoremap <silent> <Leader>gb :FSSplitBelow<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -298,7 +324,10 @@ call plug#begin('~/.vim/bundle')
 
   Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
   Plug 'tpope/vim-surround'
-  Plug 'Valloric/YouCompleteMe', { 'for': 'cpp' }
-  autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+  Plug 'Valloric/YouCompleteMe'
+"  autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+
+  Plug 'SirVer/ultisnips'
+  Plug 'derekwyatt/vim-fswitch'
 
 call plug#end()
