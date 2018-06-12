@@ -12,18 +12,18 @@ flags = [
   #'-Wno-variadic-macros',
   #'-fexceptions',
 
-  '-std=c++11',
-
   # THIS IS IMPORTANT! Without the '-x' flag, Clang won't know which language to
   # use when compiling headers. So it will guess. Badly. So C++ headers will be
   # compiled as C headers. You don't want that so ALWAYS specify the '-x' flag.
   # For a C project, you would set this to 'c' instead of 'c++'.
-  '-x', 'c++',
+  #'-std=c++11',
+  #'-x', 'c++',
+  '-x', 'c',
 
-  '-isystem', '/usr/include/c++/5.4.0',
-  #'-isystem', '/usr/include/x86_64-linux-gnu',
+  #'-isystem', '/usr/include/c++/5.4.0',
+  '-isystem', '/usr/include/x86_64-linux-gnu',
   #'-isystem', '/usr/local/boost/include',
-  #'-isystem', '/usr/include',
+  '-isystem', '/usr/include',
 ]
 
 

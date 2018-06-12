@@ -17,14 +17,15 @@ set mouse=c
 " Searching and match settings
 set hlsearch incsearch
 set ignorecase smartcase
+set showmatch
 highlight Search cterm=NONE ctermfg=black ctermbg=gray
 nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 
-" Goto closing character
-nnoremap <tab> %
 
+" Auto complete when inserting comments in c and cpp
+set formatoptions+=r
 
-" Selected Item color for Ommi and YouCompleteMe
+" Selected Item color for Omni and YouCompleteMe
 highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
 
 " If enable autoindent, the paste text will be indented and not neat.
@@ -35,6 +36,9 @@ set pastetoggle=<F2>
 " Why use double <Esc>? Avoid the delay.
 inoremap <C-c> <Esc><Esc>
 
+" Ignore directories
+set wildignore+=*/.git/*,*/build/*
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Performance options
 
@@ -43,33 +47,36 @@ set complete-=i
 " Don't update screen during macro and script execution
 set lazyredraw
 
-augroup general
+augroup performance
   autocmd!
   " Resolve performance problems (memory leak)
   autocmd BufWinLeave * call clearmatches()
-augroup general
+augroup performance
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " New lines inherit the indentation of previous line
 set autoindent
-" Convert tabs to whitespace
-set expandtab
+set expandtab    " Convert tabs to whitespace
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
 
+" Theme settings
 set background=dark
 set t_Co=256
 
-" Not fold when opening a new file
-set nofoldenable
+" Fold code settigs, ':h fold' for more detail.
+set nofoldenable " Not fold when opening a new file
 set foldmethod=indent
 set foldlevelstart=20
 set foldnestmax=3
 nnoremap <Space> za
 
-" Allowing cursor moving in insert mode
+" Goto closing character
+nnoremap <tab> %
+
+" Cursor moving in insert mode
 inoremap <C-H> <Left>
 inoremap <C-L> <Right>
 inoremap <C-J> <Down>
@@ -87,15 +94,12 @@ nnoremap <C-w>> <C-w>5><CR>
 nnoremap <C-w>+ <C-w>5+<CR>
 nnoremap <C-w>- <C-w>5-<CR>
 
-" Save current file
+" Save current file, NOTE: other files not work
 nnoremap <Leader>s :update<CR>
 " Close window
 nnoremap <Leader>x ZZ<CR>
 
-" Quick comment for CPP
-vnoremap // :s:^://<CR>
-
-" Highlight 80th line, and make it gray color.
+" Highlight 80th line
 highlight ColorColumn ctermbg=239
 set colorcolumn=81
 
@@ -181,10 +185,73 @@ let g:tagbar_show_linenumbers = 2
 " tags for ctags
 set tags=./tags;,tags
 
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " airline
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:airline#extensions#whitespace#enables = 0
+
+" tabline settings
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_tab_type = 0
+let g:airline#extensions#tabline#show_buffers = 0
+" show tab number
+let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline#extensions#tabline#tab_min_count = 2
+let g:airline#extensions#tabline#show_close_button = 0
+let g:airline#extensions#tabline#tabs_label = ''
+let g:airline#extensions#tabline#left_alt_sep = ''
+let g:airline#extensions#tabline#show_splits = 0
+
+let g:airline_powerline_fonts = 1
+
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+
+" unicode symbols
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+
+" airline symbols
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+
+" the settings like the following tabs operation
+nnoremap <Leader>1 1gt<CR>
+nnoremap <Leader>2 2gt<CR>
+nnoremap <Leader>3 3gt<CR>
+nnoremap <Leader>4 4gt<CR>
+nnoremap <Leader>5 5gt<CR>
+nnoremap <Leader>6 6gt<CR>
+nnoremap <Leader>7 7gt<CR>
+nnoremap <Leader>8 8gt<CR>
+nnoremap <Leader>9 9gt<CR>
+
+" Move to previous and next tabs
+nnoremap J :tabp<CR>
+nnoremap K :tabn<CR>
+
+nnoremap <Leader>ct :tabclose<CR>
+
+" Just show the filename (no path) in the tab
+let g:airline#extensions#tabline#fnamemod = ':t'
+
 let g:airline#extensions#default#layout = [
   \ [ 'a', 'b', 'c' ],
   \ [ 'z', 'error', 'warning' ]
@@ -259,6 +326,13 @@ command! TrimWhitespace call TrimWhitespace()
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" leaderf
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:Lf_WorkingDirectoryMode = 'Ac'
+
+nnoremap <Leader>ff :LeaderfFunction<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " youcompleteme
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ycm_collect_identifiers_from_tags_files = 0
@@ -326,7 +400,6 @@ call plug#begin('~/.vim/bundle')
   Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
   Plug 'tpope/vim-surround'
   Plug 'Valloric/YouCompleteMe'
-"  autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 
   Plug 'SirVer/ultisnips'
   Plug 'derekwyatt/vim-fswitch'
