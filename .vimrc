@@ -39,6 +39,11 @@ inoremap <C-c> <Esc><Esc>
 " Ignore directories
 set wildignore+=*/.git/*,*/build/*
 
+" 300ms for combined key maps(default is 1000ms)
+" set timeoutlen=300
+
+set laststatus=2
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Performance options
 
@@ -48,9 +53,9 @@ set complete-=i
 set lazyredraw
 
 augroup performance
-  autocmd!
-  " Resolve performance problems (memory leak)
-  autocmd BufWinLeave * call clearmatches()
+autocmd!
+" Resolve performance problems (memory leak)
+autocmd BufWinLeave * call clearmatches()
 augroup performance
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -119,6 +124,26 @@ nnoremap Q <nop>
 " Useful when open protected file
 cmap w!! w !sudo tee % >/dev/null
 
+" tabs settings
+nnoremap <Leader>1 1gt<CR>
+nnoremap <Leader>2 2gt<CR>
+nnoremap <Leader>3 3gt<CR>
+nnoremap <Leader>4 4gt<CR>
+nnoremap <Leader>5 5gt<CR>
+nnoremap <Leader>6 6gt<CR>
+nnoremap <Leader>7 7gt<CR>
+nnoremap <Leader>8 8gt<CR>
+nnoremap <Leader>9 9gt<CR>
+
+" Move to previous and next tabs.
+" J and K shortcuts confict will NERDTree(J goto first child, K goto last
+" child).
+nnoremap J :tabp<CR>
+nnoremap K :tabn<CR>
+
+nnoremap <Leader>tc :tabclose<CR>
+nnoremap <Leader>ty :tabonly<CR>
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " nerdtree
@@ -133,6 +158,10 @@ let g:NERDTreeIgnore = [
   \ ]
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeChDirMode  = 2
+
+" Unmap the J and K key, used for moving between tabs
+let g:NERDTreeMapJumpLastChild = ''
+let g:NERDTreeMapJumpFirstChild = ''
 
 " NERDTree use relative numbers
 let NERDTreeShowLineNumbers=1
@@ -176,8 +205,8 @@ let g:NERDDefaultAlign = 'left'
 " tagbar
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tagbar_ctags_bin = "/usr/local/ctags/bin/ctags"
-nnoremap <silent> <Leader>j :TagbarOpen fj<CR>
-nnoremap <silent> <Leader>t :TagbarToggle<CR>
+nnoremap <silent> <Leader>to :TagbarOpen fj<CR>
+nnoremap <silent> <Leader>tt :TagbarToggle<CR>
 
 " 2 relative line number, 0 don't show linenubmer, 1 absolute linenumbers
 let g:tagbar_show_linenumbers = 2
@@ -190,6 +219,7 @@ set tags=./tags;,tags
 " airline
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:airline#extensions#whitespace#enables = 0
+let g:airline#extensions#wordcount#enabled = 0
 
 " tabline settings
 let g:airline#extensions#tabline#enabled = 1
@@ -202,26 +232,21 @@ let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#tabline#tabs_label = ''
 let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline#extensions#tabline#show_splits = 0
+" Just show the filename (no path) in the tab
+let g:airline#extensions#tabline#fnamemod = ':t'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Custome airline theme
+let g:airline#extensions#default#layout = [
+  \ [ 'a', 'b', 'c' ],
+  \ [ 'z' ]
+  \ ]
 
 let g:airline_powerline_fonts = 1
 
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
-
-" unicode symbols
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
 
 " airline symbols
 let g:airline_left_sep = ''
@@ -231,31 +256,6 @@ let g:airline_right_alt_sep = ''
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
-
-" the settings like the following tabs operation
-nnoremap <Leader>1 1gt<CR>
-nnoremap <Leader>2 2gt<CR>
-nnoremap <Leader>3 3gt<CR>
-nnoremap <Leader>4 4gt<CR>
-nnoremap <Leader>5 5gt<CR>
-nnoremap <Leader>6 6gt<CR>
-nnoremap <Leader>7 7gt<CR>
-nnoremap <Leader>8 8gt<CR>
-nnoremap <Leader>9 9gt<CR>
-
-" Move to previous and next tabs
-nnoremap J :tabp<CR>
-nnoremap K :tabn<CR>
-
-nnoremap <Leader>ct :tabclose<CR>
-
-" Just show the filename (no path) in the tab
-let g:airline#extensions#tabline#fnamemod = ':t'
-
-let g:airline#extensions#default#layout = [
-  \ [ 'a', 'b', 'c' ],
-  \ [ 'z', 'error', 'warning' ]
-  \ ]
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
