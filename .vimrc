@@ -4,28 +4,24 @@
 filetype plugin indent on
 let g:mapleader=","
 
-" Use vim defaults instead of 100% vi compatibily
-set nocompatible
-" Absolute + Relative number simutaneously
-set nu rnu
-" Show current cursor's positin (rows, cols)
-set ruler
+set nocompatible      " Use vim defaults instead of 100% vi compatibily
+set nu rnu            " Absolute + Relative number simutaneously
+set ruler             " Show current cursor's positin (rows, cols)
 set encoding=utf-8
-set nowrap
-set mouse=c
+set mouse=c           " Not allow cursor operation
+set nowrap            " Not automatically wrap even textwidth is bigger than 0
+set textwidth=0       " Disable autowrap
 
-" Searching and match settings
-set hlsearch incsearch
-set ignorecase smartcase
-set showmatch
+" Searching settings
+set hlsearch          " Highlight searching results
+set incsearch         " Goto the search place automatically
+set ignorecase        " Case insensitive
+set smartcase
 highlight Search cterm=NONE ctermfg=black ctermbg=gray
 nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 
 
-" Auto complete when inserting comments in c and cpp
-set formatoptions+=r
-
-" Selected Item color for Omni and YouCompleteMe
+" Selected Item color for Omni and YouCompleteMe.
 highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
 
 " If enable autoindent, the paste text will be indented and not neat.
@@ -42,45 +38,57 @@ set wildignore+=*/.git/*,*/build/*
 " 300ms for combined key maps(default is 1000ms)
 " set timeoutlen=300
 
-set laststatus=2
+" set laststatus=2
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Performance options
-
-" Limit the files searched for auto-completes
-set complete-=i
-" Don't update screen during macro and script execution
-set lazyredraw
-
-augroup performance
-autocmd!
-" Resolve performance problems (memory leak)
-autocmd BufWinLeave * call clearmatches()
-augroup performance
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " New lines inherit the indentation of previous line
-set autoindent
-set expandtab    " Convert tabs to whitespace
+set autoindent      " Hit enter in insert mode or with `O` or `o` in normal mode
+set smartindent     " Reacts based on syntax/style of the code
+set expandtab       " Convert tabs to whitespace
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
 
 " Theme settings
 set background=dark
-set t_Co=256
+set t_Co=256      " Use with tmux together
 
-" Fold code settigs, ':h fold' for more detail.
-set nofoldenable " Not fold when opening a new file
-set foldmethod=indent
+" Folding settings, for help `:h fold`
+set nofoldenable        " Not fold when opening a new file
+set foldmethod=indent   " =syntax will affect performance, don't do that
 set foldlevelstart=20
 set foldnestmax=3
+" Folding toggle
 nnoremap <Space> za
 
-" Goto closing character
+" Highlight 80th line
+highlight ColorColumn ctermbg=239
+set colorcolumn=81
+
+" Switch between closing punctuation
 nnoremap <tab> %
 
+" Save current file, NOTE: other files don't take effect.
+nnoremap <Leader>s :update<CR>
+" Close window quickly
+nnoremap <Leader>x ZZ<CR>
+
+" Show the trail whitespace
+set list listchars=tab:\ \ ,trail:•
+
+" Show less output message
+" set shortmess=a
+
+" Reload ~/.vimrc without quit vim. (Global Source Vim confiure file)
+nnoremap gsv :source $MYVIMRC<CR>
+
+" Remap Q to nop, not entering Ex mode.
+nnoremap Q <nop>
+
+" Write to protected files forcely.
+cmap w!! w !sudo tee % >/dev/null
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Cursor moving in insert mode
 inoremap <C-H> <Left>
 inoremap <C-L> <Right>
@@ -99,32 +107,8 @@ nnoremap <C-w>> <C-w>5><CR>
 nnoremap <C-w>+ <C-w>5+<CR>
 nnoremap <C-w>- <C-w>5-<CR>
 
-" Save current file, NOTE: other files not work
-nnoremap <Leader>s :update<CR>
-" Close window
-nnoremap <Leader>x ZZ<CR>
-
-" Highlight 80th line
-highlight ColorColumn ctermbg=239
-set colorcolumn=81
-
-" Show the trail whitespace
-set list listchars=tab:\ \ ,trail:•
-
-" Show less output message
-set cmdheight=1
-set shortmess=a
-
-" Reload ~/.vimrc without quit. (global source ~/.vimrc)
-nnoremap gsv :so $MYVIMRC<CR>
-
-" Remap Q to nop, not enter Ex mode
-nnoremap Q <nop>
-
-" Useful when open protected file
-cmap w!! w !sudo tee % >/dev/null
-
-" tabs settings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tabs settings
 nnoremap <Leader>1 1gt<CR>
 nnoremap <Leader>2 2gt<CR>
 nnoremap <Leader>3 3gt<CR>
@@ -135,26 +119,53 @@ nnoremap <Leader>7 7gt<CR>
 nnoremap <Leader>8 8gt<CR>
 nnoremap <Leader>9 9gt<CR>
 
-" Move to previous and next tabs.
-" J and K shortcuts confict will NERDTree(J goto first child, K goto last
-" child).
+" Moving between tabs
+" J and K keys confict with NERDTree(J goto first child, K goto last child).
 nnoremap J :tabp<CR>
 nnoremap K :tabn<CR>
 
 nnoremap <Leader>tc :tabclose<CR>
-nnoremap <Leader>ty :tabonly<CR>
+nnoremap <Leader>to :tabonly<CR>
+nnoremap <Leader>tn :tabnew<CR>
+nnoremap <Leader>th :-tabmove<CR>
+nnoremap <Leader>tl :+tabmove<CR>
+nnoremap <Leader>tk :0tabmove<CR>
+nnoremap <Leader>tj :$tabmove<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Performance options
+" Limit the files searched for auto-completes
+set complete-=i
+" Don't update screen during macro and script execution
+set lazyredraw
+
+augroup performance
+  autocmd!
+  " Resolve performance problems (memory leak).
+  autocmd BufWinLeave * call clearmatches()
+augroup performance
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Auto complete when inserting comments in c,cpp.
+set formatoptions+=r
+
+" Comment for c, cpp quickly (uncomment using <Leader>cu in nerdcommenter).
+" It can be very uesful when you set`foldmethod=indent`.
+" `\s` whitespace, `\S` non-whitespace, `:noh<CR>` not highlight the searching.
+" `\%V` only highlight the searched content in visual mode.
+vmap <silent> // :s:\%V\(\S\)://\0<CR>:noh<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " nerdtree
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Find current file and switch to the directory
-nnoremap <silent> <Leader>w :NERDTreeToggle<CR>
-nnoremap <silent> <Leader>l :NERDTreeFind<CR>
+" Show directory tree and locate based current file
+nnoremap <silent> <Leader>w :NERDTreeToggle<CR><C-w>=<CR>
+nnoremap <silent> <Leader>l :NERDTreeFind<CR><C-w>=<CR>
 
 let g:NERDTreeIgnore = [
-  \ '\.o$[[file]]', '\.out$[[file]]', '\.swp$[[file]]', '\.png$[[file]]',
-  \ '\.bin$[[dir]]', '\.git$[[dir]]' 
+  \ '\.o$[[file]]', '\.out$[[file]]', '\.swp$[[file]]',
+  \ '\.bin$[[dir]]', '\.git$[[dir]]',
   \ ]
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeChDirMode  = 2
@@ -205,8 +216,8 @@ let g:NERDDefaultAlign = 'left'
 " tagbar
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tagbar_ctags_bin = "/usr/local/ctags/bin/ctags"
-nnoremap <silent> <Leader>to :TagbarOpen fj<CR>
-nnoremap <silent> <Leader>tt :TagbarToggle<CR>
+nnoremap <silent> ;j :TagbarOpen fj<CR>
+nnoremap <silent> ;t :TagbarToggle<CR>
 
 " 2 relative line number, 0 don't show linenubmer, 1 absolute linenumbers
 let g:tagbar_show_linenumbers = 2
@@ -286,7 +297,7 @@ nmap ga <Plug>(EasyAlign)
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" program based on file type
+" Autocomplete and set tab width based on file type
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 inoremap <silent> (     ()<left>
 inoremap <silent> {     {}<left>
@@ -303,13 +314,13 @@ augroup filetype_indent
   autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
   autocmd FileType python     setlocal shiftwidth=4 tabstop=4
 
-  " Shortcuts only for cpp, auto-complete closing characters
+  " Auto-completes for closing characters in c, cpp.
   autocmd FileType c,cpp inoremap <buffer><silent> "      ""<left>
   autocmd FileType c,cpp inoremap <buffer><silent> ";     "";<left><left>
   autocmd FileType c,cpp inoremap <buffer><silent> (;     ();<left><left>
   autocmd FileType c,cpp inoremap <buffer><silent> {;<CR> {<CR>};<ESC>O
 
-  " Run current script and read output to vim
+  " Run current script and read output to current file.
   autocmd FileType python nnoremap <buffer><silent> ,py :r! python %
 augroup END
 
@@ -330,7 +341,7 @@ command! TrimWhitespace call TrimWhitespace()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:Lf_WorkingDirectoryMode = 'Ac'
 
-nnoremap <Leader>ff :LeaderfFunction<CR>
+nnoremap ;f :LeaderfFunction<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " youcompleteme
@@ -342,8 +353,8 @@ let g:ycm_show_diagnostics_ui = 0
 set completeopt-=preview
 
 " Debug for youcompleteme
-let g:ycm_keep_logfiles = 1
-let g:ycm_log_level = 'debug'
+" let g:ycm_keep_logfiles = 1
+" let g:ycm_log_level = 'debug'
 
 let g:ycm_semantic_triggers = {
   \ 'c,cpp' : ['re!\w{2}'],
@@ -358,7 +369,7 @@ let g:ycm_semantic_triggers = {
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+" Trigger configuration. Do not use <tab> if you use YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<c-space>"
 
 " Don't quit insert mode, or the trigger won't take effect.
@@ -369,10 +380,11 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " fswitch (swtich between .cpp and .h files)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <silent> <Leader>gg :FSHere<CR>
-nnoremap <silent> <Leader>gl :FSSplitLeft<CR>
-nnoremap <silent> <Leader>gr :FSSplitRight<CR>
-nnoremap <silent> <Leader>gb :FSSplitBelow<CR>
+nnoremap <silent> <Leader>go :FSHere<CR>
+nnoremap <silent> <Leader>gh :FSSplitLeft<CR>
+nnoremap <silent> <Leader>gl :FSSplitRight<CR>
+nnoremap <silent> <Leader>gj :FSSplitBelow<CR>
+nnoremap <silent< <Leader>gk :FSSplitAbove<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -392,8 +404,9 @@ call plug#begin('~/.vim/bundle')
   Plug 'junegunn/vim-easy-align'
   Plug 'majutsushi/tagbar'
 
-  " NOTE: vim-fugitive conficts with vim-airline
-"  Plug 'tpope/vim-fugitive'
+  " NOTE: vim-fugitive conficts with vim-airline.
+  " Description: cursor operation lag when saving file.
+  " Plug 'tpope/vim-fugitive'
   Plug 'vim-airline/vim-airline'
   Plug 'edkolev/tmuxline.vim'
 

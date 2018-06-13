@@ -9,7 +9,8 @@
 # switch -> switch () { case: default: }
 # main   -> int main(int argc, char *argv[]) {}
 # pf		 -> printf("|");
-# **		 -> /***/
+# **		 -> /** .... */
+# /*     -> /* $1 */
 
 snippet in "#include "
 #include "$1"
@@ -70,4 +71,8 @@ snippet ** "/***/"
 /*
  * $1
  */
+endsnippet
+
+snippet /* "/**/"
+/* $1 */
 endsnippet
