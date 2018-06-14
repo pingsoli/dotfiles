@@ -30,7 +30,7 @@ set pastetoggle=<F2>
 " Important, <C-c> does not trigger autocommand, but <Esc> does.
 " If you use YouCompleteMe, use <Esc> instead <C-c>.
 " Why use double <Esc>? Avoid the delay.
-inoremap <C-c> <Esc><Esc>
+inoremap <silent> <C-c> <Esc><Esc>
 
 " Ignore directories
 set wildignore+=*/.git/*,*/build/*
@@ -153,7 +153,10 @@ set formatoptions+=r
 " It can be very uesful when you set`foldmethod=indent`.
 " `\s` whitespace, `\S` non-whitespace, `:noh<CR>` not highlight the searching.
 " `\%V` only highlight the searched content in visual mode.
-vmap <silent> // :s:\%V\(\S\)://\0<CR>:noh<CR>
+vnoremap <silent> // :s:\%V\(\S\)://\0<CR>:noh<CR>
+
+" Trim right whitespaces in visual mode.
+vnoremap <silent> <Leader><space> :s/\s\+$//e<CR>:noh<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

@@ -15,6 +15,7 @@ alias maek="make"
 alias meak="make"
 alias amek="make"
 alias mkae="make"
+alias amke="make"
 alias mak="make"
 alias sl="ls"
 
