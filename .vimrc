@@ -31,7 +31,7 @@ set pastetoggle=<F2>
 " Why use double <Esc>? Avoid the delay.
 inoremap <silent> <C-c> <Esc><Esc>
 
-" Ignore directories, take effect on Ctrlp plugin
+" Ignore directories
 set wildignore+=*/.git/*,*/build/*,*/CMakeFiles/*
 
 " 300ms for combined key maps(default is 1000ms)
@@ -195,28 +195,27 @@ let g:NERDCommentEmptyLines = 1
 let g:NERDTrimTrailingWhitespace = 1
 let g:NERDDefaultAlign = 'left'
 
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ctrlp
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_working_path_mode = 'rw'
-" open window as a new tab
-let g:ctrlp_split_window = 0
-
-" for help: `:h ctrlp_prompt_mappings`
-let g:ctrlp_prompt_mappings = {
-  \ 'PrtCurLeft()':        ['<left>'],
-  \ 'PrtCurRight()':       ['<right>'],
-  \ 'ToggleType(1)':       ['<c-h>'],
-  \ 'ToggleType(-1)':      ['<c-l>'],
-  \ }
-
-let g:ctrlp_custom_ignore = {
-  \ 'dir': '\v[\/]\.(dir|git)$',
-  \ 'file': '\v\.(a|bin|cmake|make|o|out|so|swp)$'
-  \ }
+" let g:ctrlp_map = '<c-p>'
+" let g:ctrlp_cmd = 'CtrlP'
+" let g:ctrlp_working_path_mode = 'rw'
+" " open window as a new tab
+" let g:ctrlp_split_window = 0
+"
+" " for help: `:h ctrlp_prompt_mappings`
+" let g:ctrlp_prompt_mappings = {
+"   \ 'PrtCurLeft()':        ['<left>'],
+"   \ 'PrtCurRight()':       ['<right>'],
+"   \ 'ToggleType(1)':       ['<c-l>'],
+"   \ 'ToggleType(-1)':      ['<c-h>'],
+"   \ }
+"
+" let g:ctrlp_custom_ignore = {
+"   \ 'dir': '\v[\/]\.(dir|git)$',
+"   \ 'file': '\v\.(a|bin|cmake|make|o|out|so|swp)$'
+"   \ }
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -346,7 +345,14 @@ command! TrimWhitespace call TrimWhitespace()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " leaderf
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:Lf_RootMarkers = ['.git']
 let g:Lf_WorkingDirectoryMode = 'Ac'
+let g:Lf_DefaultMode = 'FullPath'
+
+let g:Lf_WildIgnore = {
+  \ 'dir': ['.git', 'build'],
+  \ 'file': ['*.sw?','~$*','*.bak','*.o','*.so','*.py[co]']
+  \}
 
 nnoremap ;f :LeaderfFunction<CR>
 
@@ -417,9 +423,10 @@ call plug#begin('~/.vim/bundle')
   Plug 'vim-airline/vim-airline'
   Plug 'edkolev/tmuxline.vim'
 
-  " Fuzzy search files, buffers, MRU
+  " Fuzzy search files, buffers, MRU, functions. leaderf is faster a lot than
+  " ctrlp in big project.
   Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-  Plug 'ctrlpvim/ctrlp.vim'
+  " Plug 'ctrlpvim/ctrlp.vim'
 
   Plug 'tpope/vim-surround'
   Plug 'Valloric/YouCompleteMe'
