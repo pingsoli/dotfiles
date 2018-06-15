@@ -1,6 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " general settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Autoindent based on filetype.
 filetype plugin indent on
 let g:mapleader=","
 
@@ -50,7 +51,7 @@ set shiftwidth=2
 
 " Theme settings
 set background=dark
-set t_Co=256      " Use with tmux together
+set t_Co=256            " Work with tmux together
 
 " Folding settings, for help `:h fold`
 set nofoldenable        " Not fold when opening a new file
@@ -132,19 +133,6 @@ nnoremap <Leader>tk :0tabmove<CR>
 nnoremap <Leader>tj :$tabmove<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Performance options
-" Limit the files searched for auto-completes
-set complete-=i
-" Don't update screen during macro and script execution
-set lazyredraw
-
-augroup performance
-  autocmd!
-  " Resolve performance problems (memory leak).
-  autocmd BufWinLeave * call clearmatches()
-augroup performance
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Auto complete when inserting comments in c,cpp.
 set formatoptions+=r
 
@@ -159,6 +147,99 @@ vnoremap <silent> <Leader><space> :s/\s\+$//e<CR>:noh<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Performance options
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Limit the files searched for auto-completes
+set complete-=i
+" Don't update screen during macro and script execution
+set lazyredraw
+
+augroup performance
+  autocmd!
+  " Resolve performance problems (memory leak).
+  autocmd BufWinLeave * call clearmatches()
+augroup performance
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Autocomplete and set tab width based on file type
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+inoremap <silent> (     ()<left>
+inoremap <silent> {     {}<left>
+inoremap <silent> {<CR> {<CR>}<ESC>O
+inoremap <silent> [     []<left>
+
+augroup filetype_operation
+  autocmd!
+  " Edit Makefile using tabs substitute space, Indent based on filetype
+  autocmd FileType make       setlocal noexpandtab
+  autocmd FileType make       setlocal list listchars=tab:>-
+  autocmd FileType html       setlocal shiftwidth=4 tabstop=4
+  autocmd FileType java       setlocal shiftwidth=4 tabstop=4
+  autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+  autocmd FileType python     setlocal shiftwidth=4 tabstop=4
+
+  " Auto-completes for closing characters in c, cpp.
+  autocmd FileType c,cpp inoremap <buffer><silent> "      ""<left>
+  autocmd FileType c,cpp inoremap <buffer><silent> ";     "";<left><left>
+  autocmd FileType c,cpp inoremap <buffer><silent> (;     ();<left><left>
+  autocmd FileType c,cpp inoremap <buffer><silent> {;<CR> {<CR>};<ESC>O
+
+  " Run current python and read output to current file. for writing test file.
+  autocmd FileType python nnoremap <buffer><silent> ,py :r! python %
+augroup END
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" custom functions
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! TrimWhitespace()
+  let l:save = winsaveview()
+  %s/\s\+$//e
+  call winrestview(l:save)
+endfunction
+
+command! TrimWhitespace call TrimWhitespace()
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-plug (vim plugins manager)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Check vim-plug whether installed properly.
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/bundle')
+
+  Plug 'scrooloose/nerdtree'
+  Plug 'scrooloose/nerdcommenter'
+  Plug 'junegunn/vim-easy-align'
+  Plug 'majutsushi/tagbar'
+
+  " NOTE: vim-fugitive conficts with vim-airline.
+  " Description: cursor operation lag when saving file.
+  " Plug 'tpope/vim-fugitive'
+  Plug 'vim-airline/vim-airline'
+  Plug 'edkolev/tmuxline.vim'
+
+  " Fuzzy search files, buffers, MRU, functions. leaderf is faster a lot than
+  " ctrlp in big project.
+  Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+  " Plug 'ctrlpvim/ctrlp.vim'
+
+  Plug 'tpope/vim-surround'
+  Plug 'Valloric/YouCompleteMe'
+
+  Plug 'SirVer/ultisnips'
+  Plug 'derekwyatt/vim-fswitch'
+
+call plug#end()
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " nerdtree
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Show directory tree and locate based current file
@@ -169,6 +250,7 @@ let g:NERDTreeIgnore = [
   \ '\.o$[[file]]', '\.out$[[file]]', '\.swp$[[file]]',
   \ '\.bin$[[dir]]', '\.git$[[dir]]',
   \ ]
+
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeChDirMode  = 2
 
@@ -185,7 +267,7 @@ augroup END
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" nerdcommenter
+" nerdcommenter (quick comment, support many languages)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Add spaces after commet delimiters by default
 let g:NERDSpaceDelims = 1
@@ -195,8 +277,9 @@ let g:NERDCommentEmptyLines = 1
 let g:NERDTrimTrailingWhitespace = 1
 let g:NERDDefaultAlign = 'left'
 
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" ctrlp
+" ctrlp (fuzzy search, alike leaderf, not used any more)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " let g:ctrlp_map = '<c-p>'
 " let g:ctrlp_cmd = 'CtrlP'
@@ -210,6 +293,7 @@ let g:NERDDefaultAlign = 'left'
 "   \ 'PrtCurRight()':       ['<right>'],
 "   \ 'ToggleType(1)':       ['<c-l>'],
 "   \ 'ToggleType(-1)':      ['<c-h>'],
+"   \ 'PrtBS()':             ['<bs>', '<c-]>'],
 "   \ }
 "
 " let g:ctrlp_custom_ignore = {
@@ -219,7 +303,7 @@ let g:NERDDefaultAlign = 'left'
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" tagbar
+" tagbar (switch between declaration and implementation)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tagbar_ctags_bin = "/usr/local/ctags/bin/ctags"
 nnoremap <silent> ;j :TagbarOpen fj<CR>
@@ -233,7 +317,7 @@ set tags=./tags;,tags
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" airline
+" airline (beauty status bar in vim)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:airline#extensions#whitespace#enables = 0
 let g:airline#extensions#wordcount#enabled = 0
@@ -276,7 +360,7 @@ let g:airline_symbols.linenr = ''
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" highlight cpp
+" highlight for cpp syntax
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:cpp_class_scope_highlight                  = 1
 let g:cpp_member_variable_highlight              = 1
@@ -285,7 +369,7 @@ let g:cpp_experimental_simple_template_highlight = 1
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" tmuxline
+" tmuxline (beauty status bar)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tmuxline_preset = {
   \'win'  : ['#I', '#W'],
@@ -303,61 +387,28 @@ nmap ga <Plug>(EasyAlign)
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Autocomplete and set tab width based on file type
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-inoremap <silent> (     ()<left>
-inoremap <silent> {     {}<left>
-inoremap <silent> {<CR> {<CR>}<ESC>O
-inoremap <silent> [     []<left>
-
-augroup filetype_indent
-  autocmd!
-  " Edit Makefile using tabs substitute space, Indent based on filetype
-  autocmd FileType make       setlocal noexpandtab
-  autocmd FileType make       setlocal list listchars=tab:>-
-  autocmd FileType html       setlocal shiftwidth=4 tabstop=4
-  autocmd FileType java       setlocal shiftwidth=4 tabstop=4
-  autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
-  autocmd FileType python     setlocal shiftwidth=4 tabstop=4
-
-  " Auto-completes for closing characters in c, cpp.
-  autocmd FileType c,cpp inoremap <buffer><silent> "      ""<left>
-  autocmd FileType c,cpp inoremap <buffer><silent> ";     "";<left><left>
-  autocmd FileType c,cpp inoremap <buffer><silent> (;     ();<left><left>
-  autocmd FileType c,cpp inoremap <buffer><silent> {;<CR> {<CR>};<ESC>O
-
-  " Run current script and read output to current file.
-  autocmd FileType python nnoremap <buffer><silent> ,py :r! python %
-augroup END
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" custom functions
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! TrimWhitespace()
-  let l:save = winsaveview()
-  %s/\s\+$//e
-  call winrestview(l:save)
-endfunction
-
-command! TrimWhitespace call TrimWhitespace()
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" leaderf
+" leaderf (fuzzy search buffers, files, MRU, funciton declaration)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:Lf_RootMarkers = ['.git']
 let g:Lf_WorkingDirectoryMode = 'Ac'
 let g:Lf_DefaultMode = 'FullPath'
 
+" refresh leaderf when startup everytime.
+" <F5> to refresh when entering LeaderF mannually.
+let g:Lf_UseVersionControlTool = 0
+let g:Lf_UseCache = 0
+let g:Lf_UseMemoryCache = 0
+
 let g:Lf_WildIgnore = {
   \ 'dir': ['.git', 'build'],
   \ 'file': ['*.sw?','~$*','*.bak','*.o','*.so','*.py[co]']
-  \}
+  \ }
 
 nnoremap ;f :LeaderfFunction<CR>
 
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" youcompleteme
+" youcompleteme (autocomplete)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ycm_collect_identifiers_from_tags_files = 0
 let g:ycm_global_ycm_extra_conf="~/.vim/.ycm_extra_conf.py"
@@ -398,40 +449,3 @@ nnoremap <silent> <Leader>gh :FSSplitLeft<CR>
 nnoremap <silent> <Leader>gl :FSSplitRight<CR>
 nnoremap <silent> <Leader>gj :FSSplitBelow<CR>
 nnoremap <silent< <Leader>gk :FSSplitAbove<CR>
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" vim-plug (vim plugins manager)
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" vim-plug plugin manager downloader
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
-call plug#begin('~/.vim/bundle')
-
-  Plug 'scrooloose/nerdtree'
-  Plug 'scrooloose/nerdcommenter'
-  Plug 'junegunn/vim-easy-align'
-  Plug 'majutsushi/tagbar'
-
-  " NOTE: vim-fugitive conficts with vim-airline.
-  " Description: cursor operation lag when saving file.
-  " Plug 'tpope/vim-fugitive'
-  Plug 'vim-airline/vim-airline'
-  Plug 'edkolev/tmuxline.vim'
-
-  " Fuzzy search files, buffers, MRU, functions. leaderf is faster a lot than
-  " ctrlp in big project.
-  Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-  " Plug 'ctrlpvim/ctrlp.vim'
-
-  Plug 'tpope/vim-surround'
-  Plug 'Valloric/YouCompleteMe'
-
-  Plug 'SirVer/ultisnips'
-  Plug 'derekwyatt/vim-fswitch'
-
-call plug#end()
