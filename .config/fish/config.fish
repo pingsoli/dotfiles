@@ -28,3 +28,7 @@ set fish_greeting
 set -gx PYENV $HOME/.pyenv
 set -gx PATH $PYENV/bin $PATH
 source (pyenv init - | psub)
+
+# ag (searcher tool)
+set -gx AG /usr/local/ag
+set -gx PATH $AG/bin $PATH

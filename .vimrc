@@ -236,6 +236,10 @@ call plug#begin('~/.vim/bundle')
   Plug 'SirVer/ultisnips'
   Plug 'derekwyatt/vim-fswitch'
 
+  " Search word in whole project (work like ack.vim and :vimgrep)
+  Plug 'easymotion/vim-easymotion'
+  Plug 'rking/ag.vim'
+
 call plug#end()
 
 
@@ -449,3 +453,11 @@ nnoremap <silent> <Leader>gh :FSSplitLeft<CR>
 nnoremap <silent> <Leader>gl :FSSplitRight<CR>
 nnoremap <silent> <Leader>gj :FSSplitBelow<CR>
 nnoremap <silent< <Leader>gk :FSSplitAbove<CR>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ag (search context in whole project)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ag_prg="/usr/local/ag/bin/ag --vimgrep --smart-case"
+" Searching from your root project instead of the cwd
+let g:ag_working_path_mode="r"
