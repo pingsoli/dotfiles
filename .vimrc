@@ -1,4 +1,7 @@
 "{{{ general settings
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+  " Basic settings
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Autoindent based on filetype.
   filetype plugin indent on
   let g:mapleader=","
@@ -11,17 +14,11 @@
   set nowrap            " Not automatically wrap even textwidth is bigger than 0
   set textwidth=0       " Disable autowrap
 
-  " If enable autoindent, the paste text will be indented and not neat.
-  set pastetoggle=<F2>
+  " Show the trail whitespace
+  set list listchars=tab:\ \ ,trail:•
 
-  " IMPORTANT, <C-c> abort autocommand, but <Esc> does not.
-  " If you use YouCompleteMe, <C-c> will abort the autosuggestion.
-  " Why use double <Esc>? Avoid the delay.
-  inoremap <silent> <C-c> <Esc><Esc>
-
-  " Ignore directories
-  set wildignore+=*/.git/*,*/CMakeFiles/*
-
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+  " Indent settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " New lines inherit the indentation of previous line
   set autoindent      " Hit enter in insert mode or `O` or `o` in normal mode
@@ -31,11 +28,26 @@
   set softtabstop=2
   set shiftwidth=2
 
+  augroup indent_settings
+    autocmd!
+    " Edit Makefile using tabs substitute space, Indent based on filetype
+    autocmd FileType make       setlocal noexpandtab
+    autocmd FileType make       setlocal list listchars=tab:>-
+    autocmd FileType html       setlocal shiftwidth=4 tabstop=4
+    autocmd FileType java       setlocal shiftwidth=4 tabstop=4
+    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+    autocmd FileType python     setlocal shiftwidth=4 tabstop=4
+  augroup END
+
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Theme settings
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   set background=dark
   set t_Co=256            " Work with tmux together
 
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Folding settings, for help `:h fold`
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " za - fold toggle.
   " zc - close one fold under the cursor.
   " zC - close all folds under the cursor.
@@ -43,20 +55,27 @@
   " zO - open all folds under the cursor.
   " zR - open all folds.
   " zM - close all folds.
+  " [z - move to start of the open fold.
+  " ]z - move to end of the open fold.
+
   set nofoldenable        " Not fold when opening a new file
   set foldmethod=indent   " =syntax will affect performance
   set foldlevelstart=20
   set foldnestmax=3
   nnoremap <Space> za
 
-  " highlight settings
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+  " Highlight settings
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Selected Item color for Omni and YouCompleteMe.
   highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
   " Highlight 80th line
   highlight ColorColumn ctermbg=239
   set colorcolumn=81
 
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Search settings
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   set hlsearch          " Highlight searching results
   set incsearch         " Goto the search place automatically
   set ignorecase        " Case insensitive
@@ -64,39 +83,8 @@
   highlight Search cterm=NONE ctermfg=black ctermbg=gray
   nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 
-  " Switch between closing punctuation
-  nnoremap <tab> %
-
-  " Save current file, NOTE: other files don't take effect.
-  nnoremap <Leader>s :update<CR>
-  " Close window quickly
-  nnoremap <Leader>x ZZ<CR>
-
-  " Show the trail whitespace
-  set list listchars=tab:\ \ ,trail:•
-
-  " Reload ~/.vimrc without quit vim. (Global Source Vim confiure file)
-  nnoremap gsv :source $MYVIMRC<CR>
-
-  " Remap Q to nop, not entering Ex mode.
-  nnoremap Q <nop>
-
-  " Write to protected files forcely.
-  cmap w!! w !sudo tee % >/dev/null
-
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " Auto complete when inserting comments in c,cpp.
-  set formatoptions+=r
-
-  " Comment for c, cpp quickly (uncomment using <Leader>cu in nerdcommenter).
-  " It can be very uesful when you set`foldmethod=indent`.
-  " `\s` whitespace, `\S` non-whitespace, `:noh<CR>` non-highlight
-  " `\%V` only highlight the searched content in visual mode.
-  vnoremap <silent> // :s:\%V\(\S\)://\0<CR>:noh<CR>
-
-  " Trim right whitespaces in visual mode.
-  vnoremap <silent> <Leader><space> :s/\s\+$//e<CR>:noh<CR>
-
+  " Window settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Cursor moving in insert mode
   inoremap <C-H> <Left>
@@ -118,7 +106,8 @@
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Tab settings
-  " Goto nth (1-9th) tab
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+  " Goto nth tab (1-9th)
   nnoremap <Leader>1 1gt<CR>
   nnoremap <Leader>2 2gt<CR>
   nnoremap <Leader>3 3gt<CR>
@@ -129,27 +118,32 @@
   nnoremap <Leader>8 8gt<CR>
   nnoremap <Leader>9 9gt<CR>
 
-  " Moving over tabs
-  " J and K keys confict with NERDTree(J goto first child, K goto last child).
+  " Moving between tabs
+  " Remap J and K keys to work together with NERDTree.
+  " J and K keys doesn't work within NERDTree(J/K goto first/last child).
+  " J - Move to previous tab
+  " K - Move to next tab
   nnoremap J :tabp<CR>
   nnoremap K :tabn<CR>
 
-  "
+  " Opening and closing tabs
   nnoremap <Leader>tc :tabclose<CR>
   nnoremap <Leader>to :tabonly<CR>
   nnoremap <Leader>tn :tabnew<CR>
 
-
+  " Move current tab page to left
   nnoremap <Leader>th :-tabmove<CR>
+  " Move current tab page to right
   nnoremap <Leader>tl :+tabmove<CR>
+  " Move current tab page to beginning of the tab list
   nnoremap <Leader>tk :0tabmove<CR>
+  " Move current tab page to last
   nnoremap <Leader>tj :$tabmove<CR>
-
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Performance options
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " Limit the files searched for auto-completes
+  " Limit the files searched for auto-completes, for help: `h 'complete'`
   set complete-=i
   " Don't update screen during macro and script execution
   set lazyredraw
@@ -160,46 +154,72 @@
     autocmd BufWinLeave * call clearmatches()
   augroup performance
 
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+  " Autocomplete
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+  " Auto complete when inserting comments in c,cpp.
+  set formatoptions+=r
 
-  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " Autocomplete and set tab width based on file type
-  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   inoremap <silent> (     ()<left>
   inoremap <silent> {     {}<left>
   inoremap <silent> {<CR> {<CR>}<ESC>O
   inoremap <silent> [     []<left>
 
-  augroup filetype_operation
+  augroup autocompletion
     autocmd!
-    " Edit Makefile using tabs substitute space, Indent based on filetype
-    autocmd FileType make       setlocal noexpandtab
-    autocmd FileType make       setlocal list listchars=tab:>-
-    autocmd FileType html       setlocal shiftwidth=4 tabstop=4
-    autocmd FileType java       setlocal shiftwidth=4 tabstop=4
-    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
-    autocmd FileType python     setlocal shiftwidth=4 tabstop=4
-
     " Auto-completes for closing characters in c, cpp.
     autocmd FileType c,cpp inoremap <buffer><silent> "      ""<left>
     autocmd FileType c,cpp inoremap <buffer><silent> ";     "";<left><left>
     autocmd FileType c,cpp inoremap <buffer><silent> (;     ();<left><left>
     autocmd FileType c,cpp inoremap <buffer><silent> {;<CR> {<CR>};<ESC>O
-
-    " Run current python and read output to current file. for writing test file.
-    autocmd FileType python nnoremap <buffer><silent> ,py :r! python %
   augroup END
 
-
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " custom functions
+  " Misc settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  function! TrimWhitespace()
-    let l:save = winsaveview()
-    %s/\s\+$//e
-    call winrestview(l:save)
-  endfunction
+  " If enable autoindent, the paste text will be indented and not neat.
+  set pastetoggle=<F2>
 
-  command! TrimWhitespace call TrimWhitespace()
+  " IMPORTANT, <C-c> abort autocommand, but <Esc> does not.
+  " If you use YouCompleteMe, <C-c> will abort the autosuggestion.
+  " Why use double <Esc>? Avoid the delay.
+  inoremap <silent> <C-c> <Esc><Esc>
+
+  " Ignore directories
+  set wildignore+=*/.git/*,*/CMakeFiles/*
+  set wildignore+=*.o,*.swp
+
+  " Switch between closing punctuation
+  nnoremap <tab> %
+
+  " Save current file, NOTE: won't affect other files.
+  nnoremap <Leader>s :update<CR>
+  " Close window quickly (save and quit)
+  nnoremap <Leader>x ZZ<CR>
+
+  " Reload ~/.vimrc without quit vim. (Global Source Vim confiure file)
+  nnoremap gsv :source $MYVIMRC<CR>
+
+  " Remap Q to nop, not entering Ex mode.
+  nnoremap Q <nop>
+
+  " Write to protected files forcely.
+  cmap w!! w !sudo tee % >/dev/null
+
+  " Comment for c, cpp quickly (uncomment using <Leader>cu in nerdcommenter).
+  " It will be very uesful when you set `foldmethod=indent`.
+  " `\s` whitespace, `\S` non-whitespace, `:noh<CR>` non-highlight.
+  " `\%V` only highlight the searched content in visual mode.
+  vnoremap <silent> // :s:\%V\(\S\)://\0<CR>:noh<CR>
+
+  " Trim right whitespaces in visual mode.
+  vnoremap <silent> <Leader><space> :s/\s\+$//e<CR>:noh<CR>
+
+  augroup python_settings
+    autocmd!
+    " Execute current python file and read output to current location.
+    autocmd FileType python nnoremap <buffer><silent> ,py :r! python %
+  augroup END
 "}}} --- general settings
 
 "{{{ vim-plug (vim plugins manager, better than Vundle)
@@ -274,7 +294,7 @@
   let g:NERDCommentEmptyLines = 1
   let g:NERDTrimTrailingWhitespace = 1
   let g:NERDDefaultAlign = 'left'
-"}}}
+"}}} --- nerdcommenter
 
 "{{{ tagbar (switch between declaration and implementation)
   let g:tagbar_ctags_bin = "/usr/local/ctags/bin/ctags"
@@ -286,7 +306,7 @@
 
   " tags for ctags
   set tags=./tags;,tags
-"}}}
+"}}} --- tagbar
 
 "{{{ airline (beauty status bar in vim)
   let g:airline#extensions#whitespace#enables = 0
@@ -326,21 +346,21 @@
   let g:airline_symbols.branch = ''
   let g:airline_symbols.readonly = ''
   let g:airline_symbols.linenr = ''
-"}}} vim-airline
+"}}} --- vim-airline
 
 "{{{ highlight for cpp syntax
   let g:cpp_class_scope_highlight                  = 1
   let g:cpp_member_variable_highlight              = 1
   let g:cpp_class_decl_highlight                   = 1
   let g:cpp_experimental_simple_template_highlight = 1
-"}}}
+"}}} --- highlight-cpp
 
 "{{{ tmuxline (beauty status bar)
   let g:tmuxline_preset = {
     \'win'  : ['#I', '#W'],
     \'cwin' : ['#I', '#W', '#F'],
     \ }
-"}}}
+"}}} --- tmuxline
 
 "{{{ vim-easy-align
   " gaip + <space>   left alignment according to the first whitespace
@@ -354,7 +374,7 @@
   xmap ga <Plug>(EasyAlign)
   " Start interactive EasyAlign for a motion/text object (e.g. gaip)
   nmap ga <Plug>(EasyAlign)
-"}}}
+"}}} --- vim-easy-align
 
 "{{{ leaderf (fuzzy search buffers, files, MRU, funciton declaration)
   " <leader>f   find files in the project
@@ -377,10 +397,12 @@
     \ }
 
   nnoremap ;f :LeaderfFunction<CR>
-"}}}
+"}}} --- leaderf
 
 "{{{ youcompleteme (autocomplete)
-  " <c-y>     choose the item
+  " <c-y>  choose the item ("yes" to confirm)
+  " <c-j>  next item
+  " <c-k>  previous item
 
   let g:ycm_collect_identifiers_from_tags_files = 0
   let g:ycm_global_ycm_extra_conf="~/.vim/.ycm_extra_conf.py"
@@ -395,7 +417,7 @@
   let g:ycm_semantic_triggers = {
     \ 'c,cpp' : ['re!\w{2}'],
     \ }
-"}}}
+"}}} --- youcompleteme
 
 "{{{ ultisnips (autocomplete some snippets)
   let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
@@ -409,7 +431,7 @@
   " Don't quit insert mode, or the trigger won't take effect.
   let g:UltiSnipsJumpForwardTrigger="<c-b>"
   let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-"}}}
+"}}} --- ultisnips
 
 "{{{ fswitch (swtich between .cpp and .h files)
   nnoremap <silent> <Leader>go :FSHere<CR>
@@ -417,9 +439,11 @@
   nnoremap <silent> <Leader>gl :FSSplitRight<CR>
   nnoremap <silent> <Leader>gj :FSSplitBelow<CR>
   nnoremap <silent< <Leader>gk :FSSplitAbove<CR>
-"}}}
+"}}} --- fswitch
 
 "{{{ ag (search context in the whole project)
+  " ag command usage:
+  "
   " ag foo
   "   search 'foo' in current directory recursively(the output info include
   "   filename and context)
@@ -443,10 +467,11 @@
   " ag '^ba(r|z)$'
   "   using regular expression.
 
+  " NOTE: must use obsolete path.
   let g:ag_prg="/usr/local/ag/bin/ag --vimgrep --smart-case"
-  " Searching from your root project instead of the cwd
+  " Searching from your root project instead of the cwd.
   let g:ag_working_path_mode="r"
-"}}}
+"}}} --- ag
 
 "{{{ ctrlp (fuzzy search, alike leaderf, not used any more)
   " let g:ctrlp_map = '<c-p>'
@@ -468,4 +493,28 @@
   "   \ 'dir': '\v[\/]\.(dir|git)$',
   "   \ 'file': '\v\.(a|bin|cmake|make|o|out|so|swp)$'
   "   \ }
-"}}}
+"}}} --- ctrlp
+
+"{{{ vim-surround
+  " cs"'    - " -> '
+  " cs'</q> - ' -> </q>
+  " cst"    -   -> "
+  " ds"     - remove delimiters entirely.
+  " ysiw"   -
+  " ysiw[   - hello world! -> [ hello ] world!
+  " ysiw]   - hello world! -> [hello] world!
+  " yss)    - wrap the entire line.
+  "
+  " Repeat operation
+  " press dot '.', then hit punctuation.
+"}}} --- vim-surround
+
+"{{{ custom functions
+  function! TrimWhitespace()
+    let l:save = winsaveview()
+    %s/\s\+$//e
+    call winrestview(l:save)
+  endfunction
+
+  command! TrimWhitespace call TrimWhitespace()
+"}}} --- custom functions
