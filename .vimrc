@@ -258,6 +258,8 @@
     Plug 'easymotion/vim-easymotion'
     Plug 'rking/ag.vim'
 
+    Plug 'terryma/vim-multiple-cursors'
+
   call plug#end()
 "}}} --- vim-plug
 
@@ -537,6 +539,21 @@
   " <leader><leader>j       - line downward.
   " <leader><leader>k       - line upward.
 "}}} --- vim-easymotion
+
+"{{{ multiple-cursors
+  " normal/visual mode
+  " <c-n> start multicursor and add a visual cursor + selection on the match
+  "   next: <C-n> add a virtual cursor + selection on the next match
+  "   skip: <C-x> skip the next match
+  "   prev: <C-p> remove current virtual cursor + selection and go back to
+  "         previous match
+  " select all:
+  " For instance: c, s, I, A work without any issue.
+  " <Esc> to quit multicursor. NOTE: don't use <C-c> to exit multicursor.
+
+  let g:multi_cursor_select_all_word_key = ''
+  let g:multi_cursor_select_all_key      = ''
+"}}} --- multiple-cursors
 
 "{{{ custom functions
   function! TrimWhitespace()
