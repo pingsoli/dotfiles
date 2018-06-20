@@ -20,7 +20,7 @@
   inoremap <silent> <C-c> <Esc><Esc>
 
   " Ignore directories
-  set wildignore+=*/.git/*,*/build/*,*/CMakeFiles/*
+  set wildignore+=*/.git/*,*/CMakeFiles/*
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " New lines inherit the indentation of previous line
@@ -36,11 +36,17 @@
   set t_Co=256            " Work with tmux together
 
   " Folding settings, for help `:h fold`
+  " za - fold toggle.
+  " zc - close one fold under the cursor.
+  " zC - close all folds under the cursor.
+  " zo - open one fold under the cursor.
+  " zO - open all folds under the cursor.
+  " zR - open all folds.
+  " zM - close all folds.
   set nofoldenable        " Not fold when opening a new file
-  set foldmethod=indent   " =syntax will affect performance, don't do that
+  set foldmethod=indent   " =syntax will affect performance
   set foldlevelstart=20
   set foldnestmax=3
-  " Folding toggle
   nnoremap <Space> za
 
   " highlight settings
@@ -111,7 +117,8 @@
   nnoremap <C-w>- <C-w>5-<CR>
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " Tabs settings
+  " Tab settings
+  " Goto nth (1-9th) tab
   nnoremap <Leader>1 1gt<CR>
   nnoremap <Leader>2 2gt<CR>
   nnoremap <Leader>3 3gt<CR>
@@ -122,14 +129,17 @@
   nnoremap <Leader>8 8gt<CR>
   nnoremap <Leader>9 9gt<CR>
 
-  " Moving between tabs
+  " Moving over tabs
   " J and K keys confict with NERDTree(J goto first child, K goto last child).
   nnoremap J :tabp<CR>
   nnoremap K :tabn<CR>
 
+  "
   nnoremap <Leader>tc :tabclose<CR>
   nnoremap <Leader>to :tabonly<CR>
   nnoremap <Leader>tn :tabnew<CR>
+
+
   nnoremap <Leader>th :-tabmove<CR>
   nnoremap <Leader>tl :+tabmove<CR>
   nnoremap <Leader>tk :0tabmove<CR>
@@ -410,6 +420,29 @@
 "}}}
 
 "{{{ ag (search context in the whole project)
+  " ag foo
+  "   search 'foo' in current directory recursively(the output info include
+  "   filename and context)
+  "
+  " ag -i -o foo
+  "   find files containing 'foo' case-insensitively, and print only the match,
+  "   rather than the whole line.
+  "
+  " ag -l foo
+  "   only list the filename not include context.
+  "
+  " ag foo -G bar
+  "   find 'foo' in files with a name matching 'bar'
+  "
+  " ag -g bar
+  "   find files with a name matching 'foo'
+  "
+  " ag foo --ignore-dir=build/
+  "   search 'foo' in current directory exclude 'build' directory.
+  "
+  " ag '^ba(r|z)$'
+  "   using regular expression.
+
   let g:ag_prg="/usr/local/ag/bin/ag --vimgrep --smart-case"
   " Searching from your root project instead of the cwd
   let g:ag_working_path_mode="r"
