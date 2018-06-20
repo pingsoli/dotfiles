@@ -467,8 +467,8 @@
   " ag '^ba(r|z)$'
   "   using regular expression.
 
-  " NOTE: must use obsolete path.
-  let g:ag_prg="/usr/local/ag/bin/ag --vimgrep --smart-case"
+  " NOTE: must use obsolete path: '/usr/local/ag/bin/ag'.
+  let g:ag_prg="/usr/local/ag/bin/ag --vimgrep"
   " Searching from your root project instead of the cwd.
   let g:ag_working_path_mode="r"
 "}}} --- ag
@@ -496,18 +496,47 @@
 "}}} --- ctrlp
 
 "{{{ vim-surround
-  " cs"'    - " -> '
-  " cs'</q> - ' -> </q>
-  " cst"    -   -> "
-  " ds"     - remove delimiters entirely.
-  " ysiw"   -
-  " ysiw[   - hello world! -> [ hello ] world!
-  " ysiw]   - hello world! -> [hello] world!
-  " yss)    - wrap the entire line.
+  " Normal mode: cs, ds, ys
+  " cs"'   - " -> '
+  " cs'<q> - ' -> </q>
+  " cst'   - <q>word</q>  -> 'word'
+  " ds"    - remove delimiters entirely.
+  " ysiw"  -
+  " ysiw[  - hello world! -> [ hello ] world!
+  " ysiw]  - hello world! -> [hello] world!
+  " yss)   - surround the entire line.
+  "
+  " Visual mode: S
+  " VS<strong>
+  "   V: enter visual line mode
+  "   S: start surround
+  "   <strong>: the label we want to surround
+  "
+  " <strong>
+  " Hello world!
+  " </strong>
   "
   " Repeat operation
   " press dot '.', then hit punctuation.
 "}}} --- vim-surround
+
+"{{{ vim-easymotion
+  " Key mappings
+  " char
+  " <leader><leader>f{char} - find {char} to the right.
+  " <leader><leader>F{char} - find {char} to the left.
+  " <leader><leader>s{char} - Find {char} forward and backward.
+  "
+  " word
+  " <leader><leader>w       - beginning of the word forward.
+  " <leader><leader>e       - end of the word forward.
+  " <leader><leader>ge      - end of the word backward.
+  " <leader><leader>b       - beginning of the word backward.
+  "
+  " line
+  " <leader><leader>j       - line downward.
+  " <leader><leader>k       - line upward.
+"}}} --- vim-easymotion
 
 "{{{ custom functions
   function! TrimWhitespace()
