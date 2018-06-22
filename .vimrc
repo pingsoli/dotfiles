@@ -197,9 +197,6 @@
   " Close window quickly (save and quit)
   nnoremap <Leader>x ZZ<CR>
 
-  " Reload ~/.vimrc without quit vim. (Global Source Vim confiure file)
-  nnoremap gsv :source $MYVIMRC<CR>
-
   " Remap Q to nop, not entering Ex mode.
   nnoremap Q <nop>
 
@@ -214,6 +211,12 @@
 
   " Trim right whitespaces in visual mode.
   vnoremap <silent> <Leader><space> :s/\s\+$//e<CR>:noh<CR>
+
+  " Clear the last used search pattern when source .vimrc
+  let @/=""
+
+  " Reload ~/.vimrc without quit vim. (Global Source Vim confiure file)
+  nnoremap gsv :source $MYVIMRC<CR>
 
   augroup python_settings
     autocmd!
@@ -231,35 +234,40 @@
   endif
 
   call plug#begin('~/.vim/bundle')
-
     Plug 'scrooloose/nerdtree'
     Plug 'scrooloose/nerdcommenter'
-    Plug 'junegunn/vim-easy-align'
     Plug 'majutsushi/tagbar'
 
+    " Make git operations simpler.
     " NOTE: vim-fugitive conficts with vim-airline.
     " Description: cursor operation lag when saving file.
     " Plug 'tpope/vim-fugitive'
+
+    " Beautify vim
     Plug 'vim-airline/vim-airline'
     Plug 'edkolev/tmuxline.vim'
 
-    " Fuzzy search files, buffers, MRU, functions. leaderf is faster a lot than
-    " ctrlp in big project.
+    " Fuzzy search files, buffers, MRU, functions.
+    " leaderf is faster than ctrlp in big project has tons of files.
     Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-    " Plug 'ctrlpvim/ctrlp.vim'
 
-    Plug 'tpope/vim-surround'
-    Plug 'Valloric/YouCompleteMe'
-
-    Plug 'SirVer/ultisnips'
-    Plug 'derekwyatt/vim-fswitch'
-
-    " Search word in whole project (work like ack.vim and :vimgrep)
-    Plug 'easymotion/vim-easymotion'
+    " Search context based on ag command, so ag.vim is just a command tool.
     Plug 'rking/ag.vim'
 
-    Plug 'terryma/vim-multiple-cursors'
+    Plug 'Valloric/YouCompleteMe'
+    Plug 'SirVer/ultisnips'
 
+    " Useful utils
+    Plug 'junegunn/vim-easy-align'
+    Plug 'tpope/vim-surround'
+    Plug 'terryma/vim-multiple-cursors'
+    Plug 'easymotion/vim-easymotion'
+
+    " Switch between .c and .h, .cpp and .hpp files only for c-family.
+    Plug 'pingsoli/a.vim'
+
+    " Bookmarks operation
+    Plug 'kshenoy/vim-signature'
   call plug#end()
 "}}} --- vim-plug
 
@@ -289,6 +297,11 @@
 "}}} --- nerdtree
 
 "{{{ nerdcommenter (quick commnet)
+  " <leader>cc - Comment out the current line or text selected in visual mode
+  " <leader>cn - same as cc but forces nesting.
+  " <leader>cb - comment and align automatically.
+  " <leader>cu - uncomment the selected lines.
+
   " Add spaces after commet delimiters by default
   let g:NERDSpaceDelims = 1
   let g:NERDCompactSexyComs = 1
@@ -435,14 +448,6 @@
   let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 "}}} --- ultisnips
 
-"{{{ fswitch (swtich between .cpp and .h files)
-  nnoremap <silent> <Leader>go :FSHere<CR>
-  nnoremap <silent> <Leader>gh :FSSplitLeft<CR>
-  nnoremap <silent> <Leader>gl :FSSplitRight<CR>
-  nnoremap <silent> <Leader>gj :FSSplitBelow<CR>
-  nnoremap <silent< <Leader>gk :FSSplitAbove<CR>
-"}}} --- fswitch
-
 "{{{ ag (search context in the whole project)
   " ag command usage:
   "
@@ -474,28 +479,6 @@
   " Searching from your root project instead of the cwd.
   let g:ag_working_path_mode="r"
 "}}} --- ag
-
-"{{{ ctrlp (fuzzy search, alike leaderf, not used any more)
-  " let g:ctrlp_map = '<c-p>'
-  " let g:ctrlp_cmd = 'CtrlP'
-  " let g:ctrlp_working_path_mode = 'rw'
-  " " open window as a new tab
-  " let g:ctrlp_split_window = 0
-  "
-  " " for help: `:h ctrlp_prompt_mappings`
-  " let g:ctrlp_prompt_mappings = {
-  "   \ 'PrtCurLeft()':        ['<left>'],
-  "   \ 'PrtCurRight()':       ['<right>'],
-  "   \ 'ToggleType(1)':       ['<c-l>'],
-  "   \ 'ToggleType(-1)':      ['<c-h>'],
-  "   \ 'PrtBS()':             ['<bs>', '<c-]>'],
-  "   \ }
-  "
-  " let g:ctrlp_custom_ignore = {
-  "   \ 'dir': '\v[\/]\.(dir|git)$',
-  "   \ 'file': '\v\.(a|bin|cmake|make|o|out|so|swp)$'
-  "   \ }
-"}}} --- ctrlp
 
 "{{{ vim-surround
   " Normal mode: cs, ds, ys
@@ -531,9 +514,11 @@
   "
   " word
   " <leader><leader>w       - beginning of the word forward.
+  " <leader><leader>W       - beggining of the WORD forward.
+  " <leader><leader>b       - beginning of the word backward.
+  " <leader><leader>B       - beginning of the WORD backward.
   " <leader><leader>e       - end of the word forward.
   " <leader><leader>ge      - end of the word backward.
-  " <leader><leader>b       - beginning of the word backward.
   "
   " line
   " <leader><leader>j       - line downward.
@@ -554,6 +539,62 @@
   let g:multi_cursor_select_all_word_key = ''
   let g:multi_cursor_select_all_key      = ''
 "}}} --- multiple-cursors
+
+"{{{ a.vim (switch between header and implementation files)
+	" :A 	 switches to the header file corresponding to the current file being edited (or vise versa)
+	" :AS  splits and switches
+	" :AV  vertical splits and switches
+	" :AT  new tab and switches
+	" :AN  cycles through matches
+	" :IH  switches to file under cursor
+	" :IHS splits and switches
+	" :IHV vertical splits and switches
+	" :IHT new tab and switches
+	" :IHN cycles through matches
+
+  nnoremap <silent> <leader>go  :A<CR>
+  nnoremap <silent> <leader>gio :IH<CR>
+
+  nnoremap <silent> <leader>gs  :AS<CR>
+  nnoremap <silent> <leader>gis :IHS<CR>
+
+  nnoremap <silent> <leader>gv  :AV<CR>
+  nnoremap <silent> <leader>giv :IHV<CR>
+
+  nnoremap <silent> <leader>gt  :AT<CR>
+  nnoremap <silent> <leader>git :IHT<CR>
+"}}} --- a.vim
+
+"{{{ vim-signature
+  " mx           Toggle mark 'x' and display it in the leftmost column
+  " dmx          Remove mark 'x' where x is a-zA-Z
+  "
+  " m,           Place the next available mark
+  " m.           If no mark on line, place the next available mark. Otherwise, remove (first) existing mark.
+  " m-           Delete all marks from the current line
+  " m<Space>     Delete all marks from the current buffer
+  " ]`           Jump to next mark
+  " [`           Jump to prev mark
+  " ]'           Jump to start of next line containing a mark
+  " ['           Jump to start of prev line containing a mark
+  " `]           Jump by alphabetical order to next mark
+  " `[           Jump by alphabetical order to prev mark
+  " ']           Jump by alphabetical order to start of next line having a mark
+  " '[           Jump by alphabetical order to start of prev line having a mark
+  " m/           Open location list and display marks from current buffer
+  "
+  " m[0-9]       Toggle the corresponding marker !@#$%^&*()
+  " m<S-[0-9]>   Remove all markers of the same type
+  " ]-           Jump to next line having a marker of the same type
+  " [-           Jump to prev line having a marker of the same type
+  " ]=           Jump to next line having a marker of any type
+  " [=           Jump to prev line having a marker of any type
+  " m?           Open location list and display markers from current buffer
+  " m<BS>        Remove all markers
+
+  highlight SignColumn ctermbg=none
+  highlight SignatureMarkText ctermbg=none
+"}}}
 
 "{{{ custom functions
   function! TrimWhitespace()
