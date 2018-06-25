@@ -11,6 +11,11 @@ alias .6="cd ../../../../../.."
 alias tmux="tmux -2"
 
 # Typo aliases
+alias cmaek="cmake"
+alias cmeak="cmake"
+alias cmkae="cmake"
+alias camke="cmake"
+alias cmkae="cmake"
 alias maek="make"
 alias meak="make"
 alias amek="make"

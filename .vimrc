@@ -187,10 +187,7 @@
 
   " Ignore directories
   set wildignore+=*/.git/*,*/CMakeFiles/*
-  set wildignore+=*.o,*.swp
-
-  " Switch between closing punctuation
-  nnoremap <tab> %
+  set wildignore+=*.o,*.swp,tags,*cmake
 
   " Save current file, NOTE: won't affect other files.
   nnoremap <Leader>s :update<CR>
@@ -252,7 +249,7 @@
     Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 
     " Search context based on ag command, so ag.vim is just a command tool.
-    Plug 'rking/ag.vim'
+    Plug 'mileszs/ack.vim'
 
     Plug 'Valloric/YouCompleteMe'
     Plug 'SirVer/ultisnips'
@@ -266,16 +263,18 @@
     " Switch between .c and .h, .cpp and .hpp files only for c-family.
     Plug 'pingsoli/a.vim'
 
-    " Bookmarks operation
+    " Bookmarks operation.
     Plug 'kshenoy/vim-signature'
   call plug#end()
 "}}} --- vim-plug
 
-"{{{ nerdtree
+"{{{ nerdtree plugin
   " Show directory tree and locate based current file
   nnoremap <silent> <Leader>w :NERDTreeToggle<CR><C-w>=<CR>
   nnoremap <silent> <Leader>l :NERDTreeFind<CR><C-w>=<CR>
 
+  " Use the wildignore.
+  let g:NERDTreeRespectWildIgnore = 1
   let g:NERDTreeIgnore = [
     \ '\.o$[[file]]', '\.out$[[file]]', '\.swp$[[file]]',
     \ '\.bin$[[dir]]', '\.git$[[dir]]',
@@ -284,9 +283,14 @@
   let g:NERDTreeShowHidden = 1
   let g:NERDTreeChDirMode  = 2
 
-  " Unmap the J and K key, used for moving between tabs
+  " Remove the default key mappings in nerdtree,
+  " and remap J and K key for moving between tabs.
   let g:NERDTreeMapJumpLastChild = ''
   let g:NERDTreeMapJumpFirstChild = ''
+
+  " Remap <C-j> and <C-k> for moving between windows.
+  let g:NERDTreeMapJumpNextSibling = ''
+  let g:NERDTreeMapJumpPrevSibling = ''
 
   " NERDTree use relative numbers
   let NERDTreeShowLineNumbers=1
@@ -296,7 +300,7 @@
   augroup END
 "}}} --- nerdtree
 
-"{{{ nerdcommenter (quick commnet)
+"{{{ nerdcommenter plugin (quick commnet)
   " <leader>cc - Comment out the current line or text selected in visual mode
   " <leader>cn - same as cc but forces nesting.
   " <leader>cb - comment and align automatically.
@@ -311,7 +315,14 @@
   let g:NERDDefaultAlign = 'left'
 "}}} --- nerdcommenter
 
-"{{{ tagbar (switch between declaration and implementation)
+"{{{ tagbar plugin (switch between declaration and implementation)
+  " tags operations
+  " :ta main  goto the main function definition
+  " <c-]>  goto the declaration
+  " g]     view all declaration
+  " <c-t>  goto the last location
+  " <c-w>] preview
+
   let g:tagbar_ctags_bin = "/usr/local/ctags/bin/ctags"
   nnoremap <silent> ;j :TagbarOpen fj<CR>
   nnoremap <silent> ;t :TagbarToggle<CR>
@@ -320,10 +331,10 @@
   let g:tagbar_show_linenumbers = 2
 
   " tags for ctags
-  set tags=./tags;,tags
+  set tags=./tags
 "}}} --- tagbar
 
-"{{{ airline (beauty status bar in vim)
+"{{{ airline plugin (beauty status bar in vim)
   let g:airline#extensions#whitespace#enables = 0
   let g:airline#extensions#wordcount#enabled = 0
 
@@ -391,10 +402,13 @@
   nmap ga <Plug>(EasyAlign)
 "}}} --- vim-easy-align
 
-"{{{ leaderf (fuzzy search buffers, files, MRU, funciton declaration)
+"{{{ leaderf plugin (fuzzy search buffers, files, MRU, funciton declaration)
   " <leader>f   find files in the project
   " <leader>b   find buffers in the project
   " ;f          find function in current file (for cpp)
+  " <c-x>       open in horizontal split window
+  " <c-]>       open in vertical split window
+  " <leader>b<tab>d  delete the buffer under the cursor line.
 
   let g:Lf_RootMarkers = ['.git']
   let g:Lf_WorkingDirectoryMode = 'Ac'
@@ -414,7 +428,7 @@
   nnoremap ;f :LeaderfFunction<CR>
 "}}} --- leaderf
 
-"{{{ youcompleteme (autocomplete)
+"{{{ youcompleteme plugin (autocomplete)
   " <c-y>  choose the item ("yes" to confirm)
   " <c-j>  next item
   " <c-k>  previous item
@@ -434,7 +448,7 @@
     \ }
 "}}} --- youcompleteme
 
-"{{{ ultisnips (autocomplete some snippets)
+"{{{ ultisnips plugin (autocomplete some snippets)
   let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
 
   " If you want :UltiSnipsEdit to split your window.
@@ -448,7 +462,7 @@
   let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 "}}} --- ultisnips
 
-"{{{ ag (search context in the whole project)
+"{{{ ack (search context in the whole project)
   " ag command usage:
   "
   " ag foo
@@ -473,12 +487,26 @@
   "
   " ag '^ba(r|z)$'
   "   using regular expression.
+	"
+	" Ack plugin key shortcuts
+	" ?    a quick summary of these keys, repeat to close
+	" o    to open (same as Enter)
+	" O    to open and close the quickfix window
+	" go   to preview file, open but maintain focus on ack.vim results
+	" t    to open in new tab
+	" T    to open in new tab without moving to it
+	" h    to open in horizontal split
+	" H    to open in horizontal split, keeping focus on the results
+	" v    to open in vertical split
+	" gv   to open in vertical split, keeping focus on the results
+	" q    to close the quickfix window
 
-  " NOTE: must use obsolete path: '/usr/local/ag/bin/ag'.
-  let g:ag_prg="/usr/local/ag/bin/ag --vimgrep"
-  " Searching from your root project instead of the cwd.
-  let g:ag_working_path_mode="r"
-"}}} --- ag
+  " Use ag
+  let g:ackprg = '/usr/local/ag/bin/ag --vimgrep'
+
+  cnoreabbrev Ack Ack!
+  nnoremap <leader>a :Ack!<space>
+"}}} --- ack
 
 "{{{ vim-surround
   " Normal mode: cs, ds, ys
@@ -505,7 +533,7 @@
   " press dot '.', then hit punctuation.
 "}}} --- vim-surround
 
-"{{{ vim-easymotion
+"{{{ vim-easymotion plugin
   " Key mappings
   " char
   " <leader><leader>f{char} - find {char} to the right.
@@ -519,6 +547,7 @@
   " <leader><leader>B       - beginning of the WORD backward.
   " <leader><leader>e       - end of the word forward.
   " <leader><leader>ge      - end of the word backward.
+  " <leader><leader>gE      - end of the WORD backword.
   "
   " line
   " <leader><leader>j       - line downward.
