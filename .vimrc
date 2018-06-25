@@ -108,15 +108,15 @@
   " Tab settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Goto nth tab (1-9th)
-  nnoremap <Leader>1 1gt<CR>
-  nnoremap <Leader>2 2gt<CR>
-  nnoremap <Leader>3 3gt<CR>
-  nnoremap <Leader>4 4gt<CR>
-  nnoremap <Leader>5 5gt<CR>
-  nnoremap <Leader>6 6gt<CR>
-  nnoremap <Leader>7 7gt<CR>
-  nnoremap <Leader>8 8gt<CR>
-  nnoremap <Leader>9 9gt<CR>
+  nnoremap <Leader>1  1gt<CR>
+  nnoremap <Leader>2  2gt<CR>
+  nnoremap <Leader>3  3gt<CR>
+  nnoremap <Leader>4  4gt<CR>
+  nnoremap <Leader>5  5gt<CR>
+  nnoremap <Leader>6  6gt<CR>
+  nnoremap <Leader>7  7gt<CR>
+  nnoremap <Leader>8  8gt<CR>
+  nnoremap <Leader>9  9gt<CR>
 
   " Moving between tabs
   " Remap J and K keys to work together with NERDTree.
@@ -187,7 +187,7 @@
 
   " Ignore directories
   set wildignore+=*/.git/*,*/CMakeFiles/*
-  set wildignore+=*.o,*.swp,tags,*cmake
+  set wildignore+=*.o,*.swp,tags,*.cmake
 
   " Save current file, NOTE: won't affect other files.
   nnoremap <Leader>s :update<CR>
@@ -206,7 +206,7 @@
   " `\%V` only highlight the searched content in visual mode.
   vnoremap <silent> // :s:\%V\(\S\)://\0<CR>:noh<CR>
 
-  " Trim right whitespaces in visual mode.
+  " Trim the right whitespaces in visual mode.
   vnoremap <silent> <Leader><space> :s/\s\+$//e<CR>:noh<CR>
 
   " Clear the last used search pattern when source .vimrc
@@ -222,7 +222,7 @@
   augroup END
 "}}} --- general settings
 
-"{{{ vim-plug (vim plugins manager, better than Vundle)
+"{{{ vim-plug plugin (vim plugins manager, better than Vundle)
   " Check vim-plug whether installed properly.
   if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -248,20 +248,25 @@
     " leaderf is faster than ctrlp in big project has tons of files.
     Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 
-    " Search context based on ag command, so ag.vim is just a command tool.
+    " Search tool based on ag command.
     Plug 'mileszs/ack.vim'
 
+    " Auto-complementation.
     Plug 'Valloric/YouCompleteMe'
+    " Auto-complementation for code snippets.
     Plug 'SirVer/ultisnips'
 
-    " Useful utils
+    " Alignment based on specific characters.
     Plug 'junegunn/vim-easy-align'
+    " Surround a word or a line quickly.
     Plug 'tpope/vim-surround'
     Plug 'terryma/vim-multiple-cursors'
     Plug 'easymotion/vim-easymotion'
 
     " Switch between .c and .h, .cpp and .hpp files only for c-family.
     Plug 'pingsoli/a.vim'
+    " Close all other buffers except the current.
+    Plug 'pingsoli/BufOnly.vim'
 
     " Bookmarks operation.
     Plug 'kshenoy/vim-signature'
@@ -388,7 +393,7 @@
     \ }
 "}}} --- tmuxline
 
-"{{{ vim-easy-align
+"{{{ vim-easy-align plugin
   " gaip + <space>   left alignment according to the first whitespace
   " gaip + 2<space>  left alignment according to the 2th whitespace
   " gaip + *<space>  left alignment according to the all whitespaces
@@ -462,31 +467,30 @@
   let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 "}}} --- ultisnips
 
-"{{{ ack (search context in the whole project)
+"{{{ ack plugin (search context in the whole project)
   " ag command usage:
+  "   ag foo
+  "     search 'foo' in current directory recursively(the output info include
+  "     filename and context)
   "
-  " ag foo
-  "   search 'foo' in current directory recursively(the output info include
-  "   filename and context)
+  "   ag -i -o foo
+  "     find files containing 'foo' case-insensitively, and print only the match,
+  "     rather than the whole line.
   "
-  " ag -i -o foo
-  "   find files containing 'foo' case-insensitively, and print only the match,
-  "   rather than the whole line.
+  "   ag -l foo
+  "     only list the filename not include context.
   "
-  " ag -l foo
-  "   only list the filename not include context.
+  "   ag foo -G bar
+  "     find 'foo' in files with a name matching 'bar'
   "
-  " ag foo -G bar
-  "   find 'foo' in files with a name matching 'bar'
+  "   ag -g bar
+  "     find files with a name matching 'foo'
   "
-  " ag -g bar
-  "   find files with a name matching 'foo'
+  "   ag foo --ignore-dir=build/
+  "     search 'foo' in current directory exclude 'build' directory.
   "
-  " ag foo --ignore-dir=build/
-  "   search 'foo' in current directory exclude 'build' directory.
-  "
-  " ag '^ba(r|z)$'
-  "   using regular expression.
+  "   ag '^ba(r|z)$'
+  "     using regular expression.
 	"
 	" Ack plugin key shortcuts
 	" ?    a quick summary of these keys, repeat to close
@@ -501,7 +505,7 @@
 	" gv   to open in vertical split, keeping focus on the results
 	" q    to close the quickfix window
 
-  " Use ag
+  " Use ag command.
   let g:ackprg = '/usr/local/ag/bin/ag --vimgrep'
 
   cnoreabbrev Ack Ack!
@@ -624,6 +628,10 @@
   highlight SignColumn ctermbg=none
   highlight SignatureMarkText ctermbg=none
 "}}}
+
+"{{{ bufonly (close all other buffers
+  nnoremap <silent> bo :BufOnly<CR>
+")}}}
 
 "{{{ custom functions
   function! TrimWhitespace()
