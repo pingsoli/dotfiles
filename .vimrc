@@ -52,7 +52,7 @@
   set colorcolumn=81
 
   " Autocomplete color scheme for Omni and YCM.
-  highlight Pmenu ctermbg=232 ctermfg=brown
+  highlight Pmenu ctermbg=234 ctermfg=brown
   highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -493,19 +493,19 @@
   "
   "   ag '^ba(r|z)$'
   "     using regular expression.
-	"
-	" Ack plugin key shortcuts
-	" ?    a quick summary of these keys, repeat to close
-	" o    to open (same as Enter)
-	" O    to open and close the quickfix window
-	" go   to preview file, open but maintain focus on ack.vim results
-	" t    to open in new tab
-	" T    to open in new tab without moving to it
-	" h    to open in horizontal split
-	" H    to open in horizontal split, keeping focus on the results
-	" v    to open in vertical split
-	" gv   to open in vertical split, keeping focus on the results
-	" q    to close the quickfix window
+  "
+  " Ack plugin key shortcuts
+  " ?    a quick summary of these keys, repeat to close
+  " o    to open (same as Enter)
+  " O    to open and close the quickfix window
+  " go   to preview file, open but maintain focus on ack.vim results
+  " t    to open in new tab
+  " T    to open in new tab without moving to it
+  " h    to open in horizontal split
+  " H    to open in horizontal split, keeping focus on the results
+  " v    to open in vertical split
+  " gv   to open in vertical split, keeping focus on the results
+  " q    to close the quickfix window
 
   " Use ag command.
   let g:ackprg = '/usr/local/ag/bin/ag --vimgrep'
@@ -576,16 +576,16 @@
 "}}} --- multiple-cursors
 
 "{{{ a.vim (switch between header and implementation files)
-	" :A 	 switches to the header file corresponding to the current file being edited (or vise versa)
-	" :AS  splits and switches
-	" :AV  vertical splits and switches
-	" :AT  new tab and switches
-	" :AN  cycles through matches
-	" :IH  switches to file under cursor
-	" :IHS splits and switches
-	" :IHV vertical splits and switches
-	" :IHT new tab and switches
-	" :IHN cycles through matches
+  " :A 	 switches to the header file corresponding to the current file being edited (or vise versa)
+  " :AS  splits and switches
+  " :AV  vertical splits and switches
+  " :AT  new tab and switches
+  " :AN  cycles through matches
+  " :IH  switches to file under cursor
+  " :IHS splits and switches
+  " :IHV vertical splits and switches
+  " :IHT new tab and switches
+  " :IHN cycles through matches
 
   nnoremap <silent> <leader>go  :A<CR>
   nnoremap <silent> <leader>gio :IH<CR>
