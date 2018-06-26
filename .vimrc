@@ -11,7 +11,7 @@
   set ruler             " Show current cursor's positin (rows, cols)
   set encoding=utf-8
   set mouse=c           " Not allow cursor operation
-  set nowrap            " Not automatically wrap even textwidth is bigger than 0
+  set nowrap            " Not wrap automatically even textwidth is bigger than 0
   set textwidth=0       " Disable autowrap
 
   " Show the trail whitespace
@@ -42,8 +42,18 @@
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Theme settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+  " refer to https://jonasjacek.github.io/colors/
   set background=dark
-  set t_Co=256            " Work with tmux together
+  " Make sure set it to work together with tmux.
+  set t_Co=256
+
+  " Highlight 80th line
+  highlight ColorColumn ctermbg=239
+  set colorcolumn=81
+
+  " Autocomplete color scheme for Omni and YCM.
+  highlight Pmenu ctermbg=232 ctermfg=brown
+  highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Folding settings, for help `:h fold`
@@ -63,15 +73,6 @@
   set foldlevelstart=20
   set foldnestmax=3
   nnoremap <Space> za
-
-  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " Highlight settings
-  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " Selected Item color for Omni and YouCompleteMe.
-  highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
-  " Highlight 80th line
-  highlight ColorColumn ctermbg=239
-  set colorcolumn=81
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Search settings
@@ -437,6 +438,7 @@
   " <c-y>  choose the item ("yes" to confirm)
   " <c-j>  next item
   " <c-k>  previous item
+  " <tab>  choose next, same as <c-i>
 
   let g:ycm_collect_identifiers_from_tags_files = 0
   let g:ycm_global_ycm_extra_conf="~/.vim/.ycm_extra_conf.py"
@@ -630,15 +632,5 @@
 "}}}
 
 "{{{ bufonly (close all other buffers
-  nnoremap <silent> bo :BufOnly<CR>
+  nnoremap <silent> <leader>bo :BufOnly<CR>
 ")}}}
-
-"{{{ custom functions
-  function! TrimWhitespace()
-    let l:save = winsaveview()
-    %s/\s\+$//e
-    call winrestview(l:save)
-  endfunction
-
-  command! TrimWhitespace call TrimWhitespace()
-"}}} --- custom functions
