@@ -22,6 +22,7 @@ alias amek="make"
 alias amke="make"
 alias mkae="make"
 alias mak="make"
+alias kmae="make"
 alias sl="ls"
 
 set -gx FISH_PATH $HOME/.config/fish

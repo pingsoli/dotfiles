@@ -1,3 +1,55 @@
+"{{{ vim-plug plugin (vim plugins manager, better than Vundle)
+  " Check vim-plug whether installed properly.
+  if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+          \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  endif
+
+  call plug#begin('~/.vim/bundle')
+    Plug 'scrooloose/nerdtree'
+    Plug 'scrooloose/nerdcommenter'
+    Plug 'majutsushi/tagbar'
+
+    " Make git operations simpler.
+    " NOTE: vim-fugitive conficts with vim-airline.
+    " Description: cursor operation lag when saving file.
+    " Plug 'tpope/vim-fugitive'
+
+    " Beautify vim
+    Plug 'vim-airline/vim-airline'
+    Plug 'edkolev/tmuxline.vim'
+
+    " Fuzzy search files, buffers, MRU, functions.
+    " leaderf is faster than ctrlp in big project has tons of files.
+    Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+
+    " Search tool based on ag command.
+    Plug 'mileszs/ack.vim'
+
+    " Auto-complementation.
+    Plug 'Valloric/YouCompleteMe'
+    " Auto-complementation for code snippets.
+    Plug 'SirVer/ultisnips'
+
+    " Alignment based on specific characters.
+    Plug 'junegunn/vim-easy-align'
+    " Surround a word or a line quickly.
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-repeat'
+    Plug 'terryma/vim-multiple-cursors'
+    Plug 'easymotion/vim-easymotion'
+
+    " Switch between .c and .h, .cpp and .hpp files only for c-family.
+    Plug 'pingsoli/a.vim'
+    " Close all other buffers except the current.
+    Plug 'pingsoli/BufOnly.vim'
+
+    " Bookmarks operation.
+    Plug 'kshenoy/vim-signature'
+  call plug#end()
+"}}} --- vim-plug
+
 "{{{ general settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Basic settings
@@ -9,10 +61,10 @@
   set nocompatible      " Use vim defaults instead of 100% vi compatibily
   set nu rnu            " Absolute + Relative number simutaneously
   set ruler             " Show current cursor's positin (rows, cols)
-  set encoding=utf-8
-  set mouse=c           " Not allow cursor operation
+  set mouse=            " Mouse operation is not enabled.
   set nowrap            " Not wrap automatically even textwidth is bigger than 0
   set textwidth=0       " Disable autowrap
+  set encoding=utf-8
 
   " Show the trail whitespace
   set list listchars=tab:\ \ ,trail:•
@@ -21,9 +73,10 @@
   " Indent settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " New lines inherit the indentation of previous line
+  set smarttab
   set autoindent      " Hit enter in insert mode or `O` or `o` in normal mode
-  set smartindent     " Reacts based on syntax/style of the code
-  set expandtab       " Convert tabs to whitespace
+  set smartindent     " Reacts based on syntax/style of the code.
+  set expandtab       " Convert tabs to whitespaces
   set tabstop=2
   set softtabstop=2
   set shiftwidth=2
@@ -43,6 +96,7 @@
   " Theme settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " refer to https://jonasjacek.github.io/colors/
+
   set background=dark
   " Make sure set it to work together with tmux.
   set t_Co=256
@@ -52,7 +106,10 @@
   set colorcolumn=81
 
   " Autocomplete color scheme for Omni and YCM.
-  highlight Pmenu ctermbg=234 ctermfg=brown
+  " 234 = gray, 77 = green
+  highlight Pmenu ctermbg=234 ctermfg=77
+  highlight PmenuSbar ctermbg=102
+  highlight PmenuThumb ctermbg=239
   highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -69,7 +126,7 @@
   " ]z - move to end of the open fold.
 
   set nofoldenable        " Not fold when opening a new file
-  set foldmethod=indent   " =syntax will affect performance
+  set foldmethod=indent   " =syntax cause lag sometimes.
   set foldlevelstart=20
   set foldnestmax=3
   nnoremap <Space> za
@@ -148,6 +205,7 @@
   set complete-=i
   " Don't update screen during macro and script execution
   set lazyredraw
+  set ttyfast
 
   augroup performance
     autocmd!
@@ -165,15 +223,6 @@
   inoremap <silent> {     {}<left>
   inoremap <silent> {<CR> {<CR>}<ESC>O
   inoremap <silent> [     []<left>
-
-  augroup autocompletion
-    autocmd!
-    " Auto-completes for closing characters in c, cpp.
-    autocmd FileType c,cpp inoremap <buffer><silent> "      ""<left>
-    autocmd FileType c,cpp inoremap <buffer><silent> ";     "";<left><left>
-    autocmd FileType c,cpp inoremap <buffer><silent> (;     ();<left><left>
-    autocmd FileType c,cpp inoremap <buffer><silent> {;<CR> {<CR>};<ESC>O
-  augroup END
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Misc settings
@@ -195,7 +244,7 @@
   " Close window quickly (save and quit)
   nnoremap <Leader>x ZZ<CR>
 
-  " Remap Q to nop, not entering Ex mode.
+  " Remap Q to nop, rather entering Ex mode.
   nnoremap Q <nop>
 
   " Write to protected files forcely.
@@ -216,63 +265,30 @@
   " Reload ~/.vimrc without quit vim. (Global Source Vim confiure file)
   nnoremap gsv :source $MYVIMRC<CR>
 
+  " Load ctags recursively.
+  set tags=tags;
+
+  " Man page in vim. (Because the 'K' key has been mapped)
+  " runtime! ftplugin/man.vim
+  " nnoremap <leader>m :Man<space>
+
   augroup python_settings
     autocmd!
     " Execute current python file and read output to current location.
     autocmd FileType python nnoremap <buffer><silent> ,py :r! python %
   augroup END
+
+  augroup c_family
+    autocmd!
+    " Auto-completes for closing characters in c, cpp.
+    autocmd filetype c,cpp inoremap <buffer><silent> "      ""<left>
+    autocmd filetype c,cpp inoremap <buffer><silent> ";     "";<left><left>
+    autocmd filetype c,cpp inoremap <buffer><silent> (;     ();<left><left>
+    autocmd filetype c,cpp inoremap <buffer><silent> {;<CR> {<CR>};<ESC>O
+
+    autocmd filetype c,cpp set matchpairs+==:;
+  augroup END
 "}}} --- general settings
-
-"{{{ vim-plug plugin (vim plugins manager, better than Vundle)
-  " Check vim-plug whether installed properly.
-  if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-          \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-  endif
-
-  call plug#begin('~/.vim/bundle')
-    Plug 'scrooloose/nerdtree'
-    Plug 'scrooloose/nerdcommenter'
-    Plug 'majutsushi/tagbar'
-
-    " Make git operations simpler.
-    " NOTE: vim-fugitive conficts with vim-airline.
-    " Description: cursor operation lag when saving file.
-    " Plug 'tpope/vim-fugitive'
-
-    " Beautify vim
-    Plug 'vim-airline/vim-airline'
-    Plug 'edkolev/tmuxline.vim'
-
-    " Fuzzy search files, buffers, MRU, functions.
-    " leaderf is faster than ctrlp in big project has tons of files.
-    Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-
-    " Search tool based on ag command.
-    Plug 'mileszs/ack.vim'
-
-    " Auto-complementation.
-    Plug 'Valloric/YouCompleteMe'
-    " Auto-complementation for code snippets.
-    Plug 'SirVer/ultisnips'
-
-    " Alignment based on specific characters.
-    Plug 'junegunn/vim-easy-align'
-    " Surround a word or a line quickly.
-    Plug 'tpope/vim-surround'
-    Plug 'terryma/vim-multiple-cursors'
-    Plug 'easymotion/vim-easymotion'
-
-    " Switch between .c and .h, .cpp and .hpp files only for c-family.
-    Plug 'pingsoli/a.vim'
-    " Close all other buffers except the current.
-    Plug 'pingsoli/BufOnly.vim'
-
-    " Bookmarks operation.
-    Plug 'kshenoy/vim-signature'
-  call plug#end()
-"}}} --- vim-plug
 
 "{{{ nerdtree plugin
   " Show directory tree and locate based current file
@@ -335,9 +351,6 @@
 
   " 2 relative line number, 0 don't show linenubmer, 1 absolute linenumbers
   let g:tagbar_show_linenumbers = 2
-
-  " tags for ctags
-  set tags=./tags
 "}}} --- tagbar
 
 "{{{ airline plugin (beauty status bar in vim)
@@ -560,7 +573,7 @@
   " <leader><leader>k       - line upward.
 "}}} --- vim-easymotion
 
-"{{{ multiple-cursors
+"{{{ multiple-cursors plugin
   " normal/visual mode
   " <c-n> start multicursor and add a visual cursor + selection on the match
   "   next: <C-n> add a virtual cursor + selection on the next match
@@ -632,5 +645,5 @@
 "}}}
 
 "{{{ bufonly (close all other buffers
-  nnoremap <silent> <leader>bo :BufOnly<CR>
+  nnoremap ;bo :BufOnly<CR>
 ")}}}
