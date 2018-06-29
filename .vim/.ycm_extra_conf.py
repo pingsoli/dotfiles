@@ -23,8 +23,9 @@ flags = [
   #'-x', 'c',
 
   '-isystem', '/usr/include/c++/5.4.0',
+  '-isystem', '/usr/local/boost/include',
+
   '-isystem', '/usr/include/x86_64-linux-gnu',
-  #'-isystem', '/usr/local/boost/include',
   '-isystem', '/usr/include',
 ]
 

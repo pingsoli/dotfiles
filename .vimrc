@@ -27,12 +27,12 @@
     " Search tool based on ag command.
     Plug 'mileszs/ack.vim'
 
-    " Auto-complementation.
+    " Auto-completion.
     Plug 'Valloric/YouCompleteMe'
-    " Auto-complementation for code snippets.
+    " Auto-completion for code snippets.
     Plug 'SirVer/ultisnips'
 
-    " Alignment based on specific characters.
+    " Align based on specific characters.
     Plug 'junegunn/vim-easy-align'
     " Surround a word or a line quickly.
     Plug 'tpope/vim-surround'
@@ -46,7 +46,10 @@
     Plug 'pingsoli/BufOnly.vim'
 
     " Bookmarks operation.
-    Plug 'kshenoy/vim-signature'
+    " Plug 'kshenoy/vim-signature'
+
+    " C++ syntax highlight
+    Plug 'octol/vim-cpp-enhanced-highlight'
   call plug#end()
 "}}} --- vim-plug
 
@@ -54,38 +57,41 @@
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Basic settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " Autoindent based on filetype.
   filetype plugin indent on
   let g:mapleader=","
 
-  set nocompatible      " Use vim defaults instead of 100% vi compatibily
-  set nu rnu            " Absolute + Relative number simutaneously
-  set ruler             " Show current cursor's positin (rows, cols)
-  set mouse=            " Mouse operation is not enabled.
-  set nowrap            " Not wrap automatically even textwidth is bigger than 0
-  set textwidth=0       " Disable autowrap
-  set encoding=utf-8
+  syntax on              " Syntax highlight based on 'filetype'
+  set nocompatible       " Use vim defaults instead of 100% vi compatibily
+  set nu rnu             " Absolute + Relative number simutaneously
+  set ruler              " Show current cursor's positin (rows, cols)
+  set mouse=             " Disable mouse movement in all mode.
+  set encoding=utf-8     " The encoding displayed.
+  set showmatch          " (), [], {} highlight the match pairs.
+  set timeoutlen=500     " Mapping delay
+  set ttimeoutlen=100    " Key code delay
 
-  " Show the trail whitespace
-  set list listchars=tab:\ \ ,trail:•
+  " Show the trail whitespace, show tab specially.
+  set list listchars=tab:>-,trail:•
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Indent settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " New lines inherit the indentation of previous line
   set smarttab
-  set autoindent      " Hit enter in insert mode or `O` or `o` in normal mode
-  set smartindent     " Reacts based on syntax/style of the code.
-  set expandtab       " Convert tabs to whitespaces
+  set autoindent        " Hit enter in insert mode or `O` or `o` in normal mode
+  set smartindent       " Reacts based on syntax/style of the code.
+  set expandtab         " Convert tabs to whitespaces
   set tabstop=2
   set softtabstop=2
   set shiftwidth=2
+  set nowrap            " Not wrap automatically even textwidth is bigger than 0
+  set textwidth=0       " Disable autowrap.
 
   augroup indent_settings
     autocmd!
     " Edit Makefile using tabs substitute space, Indent based on filetype
     autocmd FileType make       setlocal noexpandtab
-    autocmd FileType make       setlocal list listchars=tab:>-
+    autocmd FileType make       setlocal list listchars=tab:\ \ ,
     autocmd FileType html       setlocal shiftwidth=4 tabstop=4
     autocmd FileType java       setlocal shiftwidth=4 tabstop=4
     autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
@@ -96,7 +102,6 @@
   " Theme settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " refer to https://jonasjacek.github.io/colors/
-
   set background=dark
   " Make sure set it to work together with tmux.
   set t_Co=256
@@ -106,11 +111,14 @@
   set colorcolumn=81
 
   " Autocomplete color scheme for Omni and YCM.
-  " 234 = gray, 77 = green
-  highlight Pmenu ctermbg=234 ctermfg=77
-  highlight PmenuSbar ctermbg=102
+  " 236 = gray, 77 = green
+  highlight Pmenu      ctermbg=235 ctermfg=77
+  highlight PmenuSel   ctermbg=24  ctermfg=NONE cterm=NONE
+  highlight PmenuSbar  ctermbg=102
   highlight PmenuThumb ctermbg=239
-  highlight PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE
+
+  " Highlight color for search results.
+  highlight Search cterm=NONE ctermfg=black ctermbg=gray
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Folding settings, for help `:h fold`
@@ -126,7 +134,7 @@
   " ]z - move to end of the open fold.
 
   set nofoldenable        " Not fold when opening a new file
-  set foldmethod=indent   " =syntax cause lag sometimes.
+  set foldmethod=indent   " '=syntax' causes cursor motion lag sometimes.
   set foldlevelstart=20
   set foldnestmax=3
   nnoremap <Space> za
@@ -134,22 +142,29 @@
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Search settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+  " Clear the last used search pattern when source .vimrc
+  let @/=""
   set hlsearch          " Highlight searching results
   set incsearch         " Goto the search place automatically
   set ignorecase        " Case insensitive
   set smartcase
-  highlight Search cterm=NONE ctermfg=black ctermbg=gray
   nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 
-  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " Window settings
-  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Cursor moving in insert mode
   inoremap <C-H> <Left>
   inoremap <C-L> <Right>
   inoremap <C-J> <Down>
   inoremap <C-K> <Up>
 
+  " Command-line mode cursor movement.
+  cnoremap <C-a> <Home>
+  cnoremap <C-e> <End>
+  cnoremap <C-h> <Left>
+  cnoremap <C-l> <Right>
+
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+  " Window settings
+  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Moving between windows
   nnoremap <C-H> <C-W><C-H>
   nnoremap <C-J> <C-W><C-J>
@@ -157,14 +172,18 @@
   nnoremap <C-L> <C-W><C-L>
 
   " Change windows resize default value
-  nnoremap <C-w>< <C-w>5<<CR>
-  nnoremap <C-w>> <C-w>5><CR>
-  nnoremap <C-w>+ <C-w>5+<CR>
-  nnoremap <C-w>- <C-w>5-<CR>
+  nnoremap <silent> <Right> :vertical resize +5<CR>
+  nnoremap <silent> <Left>  :vertical resize -5<CR>
+  nnoremap <silent> <Up>    :resize +5<CR>
+  nnoremap <silent> <Down>  :resize -5<CR>
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Tab settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+  " 0 never, 1 only if there are at least two tab pages, 2 always.
+  " Work together with airline#tabline#tab_min_count=2
+  set showtabline=1
+
   " Goto nth tab (1-9th)
   nnoremap <Leader>1  1gt<CR>
   nnoremap <Leader>2  2gt<CR>
@@ -176,7 +195,7 @@
   nnoremap <Leader>8  8gt<CR>
   nnoremap <Leader>9  9gt<CR>
 
-  " Moving between tabs
+  " Moving tabs around.
   " Remap J and K keys to work together with NERDTree.
   " J and K keys doesn't work within NERDTree(J/K goto first/last child).
   " J - Move to previous tab
@@ -201,8 +220,9 @@
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Performance options
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " Limit the files searched for auto-completes, for help: `h 'complete'`
+  " Not scan current and included files. for help: `h 'complete'`
   set complete-=i
+
   " Don't update screen during macro and script execution
   set lazyredraw
   set ttyfast
@@ -239,28 +259,26 @@
   set wildignore+=*/.git/*,*/CMakeFiles/*
   set wildignore+=*.o,*.swp,tags,*.cmake
 
-  " Save current file, NOTE: won't affect other files.
+  " Save current file, NOTE: other files won't save.
   nnoremap <Leader>s :update<CR>
   " Close window quickly (save and quit)
   nnoremap <Leader>x ZZ<CR>
 
-  " Remap Q to nop, rather entering Ex mode.
+  " Remap Q to <nop>(no operation), rather entering Ex mode.
   nnoremap Q <nop>
 
   " Write to protected files forcely.
-  cmap w!! w !sudo tee % >/dev/null
+  " cnoreabbrev is better than cnoremap.
+  cnoreabbrev w!! w !sudo tee % >/dev/null
 
   " Comment for c, cpp quickly (uncomment using <Leader>cu in nerdcommenter).
   " It will be very uesful when you set `foldmethod=indent`.
   " `\s` whitespace, `\S` non-whitespace, `:noh<CR>` non-highlight.
-  " `\%V` only highlight the searched content in visual mode.
+  " `\%V` only highlight the selected content in visual mode.
   vnoremap <silent> // :s:\%V\(\S\)://\0<CR>:noh<CR>
 
   " Trim the right whitespaces in visual mode.
   vnoremap <silent> <Leader><space> :s/\s\+$//e<CR>:noh<CR>
-
-  " Clear the last used search pattern when source .vimrc
-  let @/=""
 
   " Reload ~/.vimrc without quit vim. (Global Source Vim confiure file)
   nnoremap gsv :source $MYVIMRC<CR>
@@ -272,13 +290,13 @@
   " runtime! ftplugin/man.vim
   " nnoremap <leader>m :Man<space>
 
-  augroup python_settings
+  augroup python_programming
     autocmd!
     " Execute current python file and read output to current location.
     autocmd FileType python nnoremap <buffer><silent> ,py :r! python %
   augroup END
 
-  augroup c_family
+  augroup c_family_programming
     autocmd!
     " Auto-completes for closing characters in c, cpp.
     autocmd filetype c,cpp inoremap <buffer><silent> "      ""<left>
@@ -286,6 +304,7 @@
     autocmd filetype c,cpp inoremap <buffer><silent> (;     ();<left><left>
     autocmd filetype c,cpp inoremap <buffer><silent> {;<CR> {<CR>};<ESC>O
 
+    " '=', ';' is a match pair, if you set 'showmatch', they'll be highlighted.
     autocmd filetype c,cpp set matchpairs+==:;
   augroup END
 "}}} --- general settings
@@ -354,16 +373,20 @@
 "}}} --- tagbar
 
 "{{{ airline plugin (beauty status bar in vim)
+  let g:airline_powerline_fonts = 1
+
   let g:airline#extensions#whitespace#enables = 0
   let g:airline#extensions#wordcount#enabled = 0
 
   " tabline settings
+  let g:airline#extensions#tabline#show_buffers = 0
   let g:airline#extensions#tabline#enabled = 1
   let g:airline#extensions#tabline#show_tab_type = 0
-  let g:airline#extensions#tabline#show_buffers = 0
-  " show tab number
+
+  " show tab number from 1 ~ N.
   let g:airline#extensions#tabline#tab_nr_type = 1
   let g:airline#extensions#tabline#tab_min_count = 2
+
   let g:airline#extensions#tabline#show_close_button = 0
   let g:airline#extensions#tabline#tabs_label = ''
   let g:airline#extensions#tabline#left_alt_sep = ''
@@ -376,8 +399,6 @@
     \ [ 'a', 'b', 'c' ],
     \ [ 'z' ]
     \ ]
-
-  let g:airline_powerline_fonts = 1
 
   if !exists('g:airline_symbols')
     let g:airline_symbols = {}
@@ -448,7 +469,7 @@
 "}}} --- leaderf
 
 "{{{ youcompleteme plugin (autocomplete)
-  " <c-y>  choose the item ("yes" to confirm)
+  " <c-y>  Stop completion
   " <c-j>  next item
   " <c-k>  previous item
   " <tab>  choose next, same as <c-i>
@@ -478,8 +499,8 @@
   let g:UltiSnipsExpandTrigger="<c-space>"
 
   " Don't quit insert mode, or the trigger won't take effect.
-  let g:UltiSnipsJumpForwardTrigger="<c-b>"
-  let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+  " let g:UltiSnipsJumpForwardTrigger="<c-j>"
+  " let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 "}}} --- ultisnips
 
 "{{{ ack plugin (search context in the whole project)
@@ -507,7 +528,7 @@
   "   ag '^ba(r|z)$'
   "     using regular expression.
   "
-  " Ack plugin key shortcuts
+  " ack.vim use quickfix window, you can use these keyboard shortcuts.
   " ?    a quick summary of these keys, repeat to close
   " o    to open (same as Enter)
   " O    to open and close the quickfix window
@@ -574,18 +595,28 @@
 "}}} --- vim-easymotion
 
 "{{{ multiple-cursors plugin
-  " normal/visual mode
-  " <c-n> start multicursor and add a visual cursor + selection on the match
-  "   next: <C-n> add a virtual cursor + selection on the next match
-  "   skip: <C-x> skip the next match
-  "   prev: <C-p> remove current virtual cursor + selection and go back to
-  "         previous match
-  " select all:
-  " For instance: c, s, I, A work without any issue.
-  " <Esc> to quit multicursor. NOTE: don't use <C-c> to exit multicursor.
+  " normal/visual mode:
+  "   <c-n> start multicursor and add a visual cursor + selection on the match
+  "     next: <C-n> add a virtual cursor + selection on the next match
+  "     skip: <C-x> skip the next match
+  "     prev: <C-p> remove current virtual cursor + selection and go back to
+  "           previous match
+  "   select all:
+  "     <c-m> select all words under the cursor.
+  "     see the following key mappings.
+  "
+  " multiple-cursors mode:
+  "   c, s, I, A work same as before in vim.
+  "   Use 'c' to change the word, 's' to substitue the word, and etc.
+  "
+  " Quit multiple-cursor mode:
+  "   Use <Esc> to quit multicursor.
+  "
+  "   NOTE: don't use <C-c> to exit multicursor, and the highlighted text will
+  "   not disappear.
 
-  let g:multi_cursor_select_all_word_key = ''
-  let g:multi_cursor_select_all_key      = ''
+  let g:multi_cursor_select_all_word_key = '<C-m>'
+  let g:multi_cursor_select_all_key      = 'g<C-m>'
 "}}} --- multiple-cursors
 
 "{{{ a.vim (switch between header and implementation files)
@@ -640,10 +671,18 @@
   " m?           Open location list and display markers from current buffer
   " m<BS>        Remove all markers
 
-  highlight SignColumn ctermbg=none
-  highlight SignatureMarkText ctermbg=none
+  " If you really want vim-signature, uncomment the below.
+  " highlight SignColumn ctermbg=none
+  " highlight SignatureMarkText ctermbg=none
 "}}}
 
-"{{{ bufonly (close all other buffers
+"{{{ cpp-enhanced-hight plugin
+  let g:cpp_class_scope_highlight = 1
+  let g:cpp_member_variable_highlight = 1
+  let g:cpp_class_decl_highlight = 1
+  let g:cpp_experimental_simple_template_highlight = 1
+"}}}
+
+"{{{ bufonly (close all other buffers)
   nnoremap ;bo :BufOnly<CR>
 ")}}}

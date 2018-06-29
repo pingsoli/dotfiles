@@ -27,7 +27,6 @@ alias sl="ls"
 
 set -gx FISH_PATH $HOME/.config/fish
 
-# Set fish shell greeting based
 set fish_greeting
 
 # pyenv (python version manager)
@@ -38,3 +37,8 @@ source (pyenv init - | psub)
 # ag (searcher tool)
 set -gx AG /usr/local/ag
 set -gx PATH $AG/bin $PATH
+
+# Fzf remove duplicate history
+set -g hist_ignore_dups
+set -x FZF_DEFAULT_COMMAND "ag -g \"\""
+set -x FZF_CTRL_T_COMMAND "ag -g \"\""
