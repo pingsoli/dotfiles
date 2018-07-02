@@ -499,8 +499,8 @@
   let g:UltiSnipsExpandTrigger="<c-space>"
 
   " Don't quit insert mode, or the trigger won't take effect.
-  " let g:UltiSnipsJumpForwardTrigger="<c-j>"
-  " let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+  let g:UltiSnipsJumpForwardTrigger="<c-f>"
+  let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 "}}} --- ultisnips
 
 "{{{ ack plugin (search context in the whole project)

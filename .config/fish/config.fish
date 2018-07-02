@@ -34,11 +34,15 @@ set -gx PYENV $HOME/.pyenv
 set -gx PATH $PYENV/bin $PATH
 source (pyenv init - | psub)
 
-# ag (searcher tool)
+# ag (searcher tool), Ack.vim based on Ag.
 set -gx AG /usr/local/ag
 set -gx PATH $AG/bin $PATH
 
 # Fzf remove duplicate history
-set -g hist_ignore_dups
-set -x FZF_DEFAULT_COMMAND "ag -g \"\""
-set -x FZF_CTRL_T_COMMAND "ag -g \"\""
+# set -g hist_ignore_dups
+# set -x FZF_DEFAULT_COMMAND "ag -g \"\""
+# set -x FZF_CTRL_T_COMMAND "ag -g \"\""
+
+# Set clang as default compiler.
+set -gx CC /usr/bin/clang
+set -gx CXX /usr/bin/clang++
