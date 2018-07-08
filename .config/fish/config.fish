@@ -46,3 +46,7 @@ set -gx PATH $AG/bin $PATH
 # Set clang as default compiler.
 set -gx CC /usr/bin/clang
 set -gx CXX /usr/bin/clang++
+
+# Java environment
+set -gx JAVA_HOME /usr/local/jdk1.8
+set -gx PATH $JAVA_HOME/bin $PATH

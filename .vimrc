@@ -89,9 +89,15 @@
 
   augroup indent_settings
     autocmd!
+
+    autocmd BufRead,BufNewFile Makefile set filetype=make
+    autocmd BufRead,BufNewFile *.java   set filetype=java
+    autocmd BufRead,BufNewFile *.js     set filetype=javascript
+    autocmd BufRead,BufNewFile *.py     set filetype=python
+
     " Edit Makefile using tabs substitute space, Indent based on filetype
-    autocmd FileType make       setlocal noexpandtab
-    autocmd FileType make       setlocal list listchars=tab:\ \ ,
+    " autocmd FileType make       setlocal noexpandtab
+    " autocmd FileType make       setlocal list listchars=tab:\ \ ,
     autocmd FileType html       setlocal shiftwidth=4 tabstop=4
     autocmd FileType java       setlocal shiftwidth=4 tabstop=4
     autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
@@ -339,6 +345,19 @@
     autocmd!
     autocmd FileType nerdtree setlocal relativenumber
   augroup END
+
+  " NERDTress File highlighting
+  function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+   exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+   exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+  endfunction
+
+  call NERDTreeHighlightFile('md',     'blue',   'none', '#3366FF', '#151515')
+  call NERDTreeHighlightFile('conf',   'yellow', 'none', 'yellow',  '#151515')
+  call NERDTreeHighlightFile('json',   'yellow', 'none', 'yellow',  '#151515')
+  call NERDTreeHighlightFile('html',   'yellow', 'none', 'yellow',  '#151515')
+  call NERDTreeHighlightFile('js',     'red',    'none', '#ffa500', '#151515')
+  call NERDTreeHighlightFile('so',     'green',  'none', 'yello',   '#151515')
 "}}} --- nerdtree
 
 "{{{ nerdcommenter plugin (quick commnet)
@@ -496,7 +515,7 @@
   let g:UltiSnipsEditSplit="vertical"
 
   " Trigger configuration. Do not use <tab> if you use YouCompleteMe.
-  let g:UltiSnipsExpandTrigger="<c-space>"
+  let g:UltiSnipsExpandTrigger="<c-Space>"
 
   " Don't quit insert mode, or the trigger won't take effect.
   let g:UltiSnipsJumpForwardTrigger="<c-f>"
