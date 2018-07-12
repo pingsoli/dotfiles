@@ -41,9 +41,11 @@
     Plug 'easymotion/vim-easymotion'
 
     " Switch between .c and .h, .cpp and .hpp files only for c-family.
-    Plug 'pingsoli/a.vim'
+    " Plug 'pingsoli/a.vim'
     " Close all other buffers except the current.
-    Plug 'pingsoli/BufOnly.vim'
+    " Plug 'pingsoli/BufOnly.vim'
+    Plug 'pingsoli/vim-plugins', {'as': 'a.vim', 'rtp': 'a.vim'}
+    Plug 'pingsoli/vim-plugins', {'as': 'BufOnly.vim', 'rtp': 'BufOnly.vim'}
 
     " Bookmarks operation.
     " Plug 'kshenoy/vim-signature'
@@ -79,7 +81,8 @@
   " New lines inherit the indentation of previous line
   set smarttab
   set autoindent        " Hit enter in insert mode or `O` or `o` in normal mode
-  set smartindent       " Reacts based on syntax/style of the code.
+  " set smartindent       " Reacts based on syntax/style of the code.
+  set nosmartindent     " `smartindent` will mess up the comment on python file.
   set expandtab         " Convert tabs to whitespaces
   set tabstop=2
   set softtabstop=2
@@ -249,6 +252,8 @@
   inoremap <silent> {     {}<left>
   inoremap <silent> {<CR> {<CR>}<ESC>O
   inoremap <silent> [     []<left>
+  inoremap <silent> "     ""<left>
+  inoremap <silent> ";    "";<left><left>
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Misc settings
@@ -296,17 +301,24 @@
   " runtime! ftplugin/man.vim
   " nnoremap <leader>m :Man<space>
 
+  augroup vim_programming
+    autocmd!
+    " " is comment character
+
+    autocmd filetype vim :iunmap "
+    autocmd filetype vim :iunmap ";
+  augroup END
+
   augroup python_programming
     autocmd!
     " Execute current python file and read output to current location.
-    autocmd FileType python nnoremap <buffer><silent> ,py :r! python %
+    autocmd filetype python nnoremap <buffer><silent> ,py :r! python %<CR>
+    autocmd filetype python inoremap <buffer><silent> (: ():<left><left>
   augroup END
 
   augroup c_family_programming
     autocmd!
     " Auto-completes for closing characters in c, cpp.
-    autocmd filetype c,cpp inoremap <buffer><silent> "      ""<left>
-    autocmd filetype c,cpp inoremap <buffer><silent> ";     "";<left><left>
     autocmd filetype c,cpp inoremap <buffer><silent> (;     ();<left><left>
     autocmd filetype c,cpp inoremap <buffer><silent> {;<CR> {<CR>};<ESC>O
 
@@ -634,8 +646,9 @@
   "   NOTE: don't use <C-c> to exit multicursor, and the highlighted text will
   "   not disappear.
 
-  let g:multi_cursor_select_all_word_key = '<C-m>'
-  let g:multi_cursor_select_all_key      = 'g<C-m>'
+  " It's kind of annoying.
+  " let g:multi_cursor_select_all_word_key = '<C-m>'
+  " let g:multi_cursor_select_all_key      = 'g<C-m>'
 "}}} --- multiple-cursors
 
 "{{{ a.vim (switch between header and implementation files)
