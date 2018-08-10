@@ -9,4 +9,6 @@ function fish_user_key_bindings
   bind \el forward-char
   bind \ek forward-word
   bind \ej backward-word
+
+  bind --erase \cx
 end

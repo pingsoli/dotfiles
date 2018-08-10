@@ -24,6 +24,7 @@ alias mkae="make"
 alias mak="make"
 alias kmae="make"
 alias sl="ls"
+alias s="ls"
 
 set -gx FISH_PATH $HOME/.config/fish
 
@@ -50,3 +51,7 @@ set -gx CXX /usr/bin/clang++
 # Java environment
 set -gx JAVA_HOME /usr/local/jdk1.8
 set -gx PATH $JAVA_HOME/bin $PATH
+
+# set CDPATH for autocomplete when his tab.
+# It's kind of vexing when different directories have same names.
+# set -g CDPATH . ~/workspace

@@ -29,7 +29,7 @@
 
     " Auto-completion.
     Plug 'Valloric/YouCompleteMe'
-    " Auto-completion for code snippets.
+    " Auto-completion for code snippets, based on YCM.
     Plug 'SirVer/ultisnips'
 
     " Align based on specific characters.
@@ -41,9 +41,7 @@
     Plug 'easymotion/vim-easymotion'
 
     " Switch between .c and .h, .cpp and .hpp files only for c-family.
-    " Plug 'pingsoli/a.vim'
     " Close all other buffers except the current.
-    " Plug 'pingsoli/BufOnly.vim'
     Plug 'pingsoli/vim-plugins', {'as': 'a.vim', 'rtp': 'a.vim'}
     Plug 'pingsoli/vim-plugins', {'as': 'BufOnly.vim', 'rtp': 'BufOnly.vim'}
 
@@ -92,11 +90,6 @@
 
   augroup indent_settings
     autocmd!
-
-    autocmd BufRead,BufNewFile Makefile set filetype=make
-    autocmd BufRead,BufNewFile *.java   set filetype=java
-    autocmd BufRead,BufNewFile *.js     set filetype=javascript
-    autocmd BufRead,BufNewFile *.py     set filetype=python
 
     " Edit Makefile using tabs substitute space, Indent based on filetype
     " autocmd FileType make       setlocal noexpandtab
@@ -259,6 +252,7 @@
   " Misc settings
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " If enable autoindent, the paste text will be indented and not neat.
+  " NOTE: paste mode will set noexpandtab.
   set pastetoggle=<F2>
 
   " IMPORTANT, <C-c> abort autocommand, but <Esc> does not.
@@ -286,7 +280,7 @@
   " It will be very uesful when you set `foldmethod=indent`.
   " `\s` whitespace, `\S` non-whitespace, `:noh<CR>` non-highlight.
   " `\%V` only highlight the selected content in visual mode.
-  vnoremap <silent> // :s:\%V\(\S\)://\0<CR>:noh<CR>
+  vnoremap <silent> // :s:\%V\(\S\):// \0<CR>:noh<CR>
 
   " Trim the right whitespaces in visual mode.
   vnoremap <silent> <Leader><space> :s/\s\+$//e<CR>:noh<CR>
@@ -300,14 +294,6 @@
   " Man page in vim. (Because the 'K' key has been mapped)
   " runtime! ftplugin/man.vim
   " nnoremap <leader>m :Man<space>
-
-  augroup vim_programming
-    autocmd!
-    " " is comment character
-
-    autocmd filetype vim :iunmap "
-    autocmd filetype vim :iunmap ";
-  augroup END
 
   augroup python_programming
     autocmd!
@@ -328,7 +314,8 @@
 "}}} --- general settings
 
 "{{{ nerdtree plugin
-  " Show directory tree and locate based current file
+  " Show directory tree and locate to the current file(underline may not under
+  " the cusor).
   nnoremap <silent> <Leader>w :NERDTreeToggle<CR><C-w>=<CR>
   nnoremap <silent> <Leader>l :NERDTreeFind<CR><C-w>=<CR>
 
@@ -359,24 +346,29 @@
   augroup END
 
   " NERDTress File highlighting
-  function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
-   exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
-   exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
-  endfunction
+  " function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+  "  exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+  "  exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+  " endfunction
 
-  call NERDTreeHighlightFile('md',     'blue',   'none', '#3366FF', '#151515')
-  call NERDTreeHighlightFile('conf',   'yellow', 'none', 'yellow',  '#151515')
-  call NERDTreeHighlightFile('json',   'yellow', 'none', 'yellow',  '#151515')
-  call NERDTreeHighlightFile('html',   'yellow', 'none', 'yellow',  '#151515')
-  call NERDTreeHighlightFile('js',     'red',    'none', '#ffa500', '#151515')
-  call NERDTreeHighlightFile('so',     'green',  'none', 'yello',   '#151515')
+  " call NERDTreeHighlightFile('md',     'blue',   'none', '#3366FF', '#151515')
+  " call NERDTreeHighlightFile('conf',   'yellow', 'none', 'yellow',  '#151515')
+  " call NERDTreeHighlightFile('json',   'yellow', 'none', 'yellow',  '#151515')
+  " call NERDTreeHighlightFile('html',   'yellow', 'none', 'yellow',  '#151515')
+  " call NERDTreeHighlightFile('js',     'red',    'none', '#ffa500', '#151515')
+  " call NERDTreeHighlightFile('so',     'green',  'none', 'yello',   '#151515')
 "}}} --- nerdtree
 
 "{{{ nerdcommenter plugin (quick commnet)
+  " NERDCommenter default mappings
   " <leader>cc - Comment out the current line or text selected in visual mode
   " <leader>cn - same as cc but forces nesting.
   " <leader>cb - comment and align automatically.
   " <leader>cu - uncomment the selected lines.
+
+  " Custom mappings
+  " <leader>c - Comment
+  " <leader>u - Uncomment
 
   " Add spaces after commet delimiters by default
   let g:NERDSpaceDelims = 1
@@ -385,6 +377,12 @@
   let g:NERDCommentEmptyLines = 1
   let g:NERDTrimTrailingWhitespace = 1
   let g:NERDDefaultAlign = 'left'
+
+  " Disable default mapping for us.
+  let g:NERDCreateDefaultMappings = 0
+  map <Leader>c <Plug>NERDCommenterToggle
+  map <Leader>u <plug>NERDCommenterUncomment
+
 "}}} --- nerdcommenter
 
 "{{{ tagbar plugin (switch between declaration and implementation)

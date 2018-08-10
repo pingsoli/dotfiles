@@ -7,7 +7,7 @@ YCM_CONF="$HOME/.vim/.ycm_extra_conf.py"
 TMUX_CONF="$HOME/.tmux.conf"
 FISH_CONF="$HOME/.config/fish"
 
-function backup()
+backup()
 {
   if [ ! -e ".vim/plugin" ]; then
     mkdir .config/
@@ -29,7 +29,7 @@ function backup()
   { set +x; } 2>/dev/null
 }
 
-function push()
+push()
 {
   git add .
   git commit -m "$1"
@@ -38,6 +38,8 @@ function push()
 
 case "$1" in
   push)
+    backup
+
     if [ "$#" -ne 2 ]; then
       echo -e "no commit message\nusage: ./config.sh push <msg> [branch]"
       exit 1
