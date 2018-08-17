@@ -380,7 +380,7 @@
 
   " Disable default mapping for us.
   let g:NERDCreateDefaultMappings = 0
-  map <Leader>c <Plug>NERDCommenterToggle
+  map <Leader>c <Plug>NERDCommenterComment
   map <Leader>u <plug>NERDCommenterUncomment
 
 "}}} --- nerdcommenter
