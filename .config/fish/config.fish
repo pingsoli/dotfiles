@@ -31,13 +31,16 @@ set -gx FISH_PATH $HOME/.config/fish
 set fish_greeting
 
 ## pyenv (python version manager)
-set -gx PYENV $HOME/.pyenv
-set -gx PATH $PYENV/bin $PATH
-source (pyenv init - | psub)
+if test (command -s pyenv)
+  set -gx PATH $HOME/.pyenv/bin $PATH
+  source (pyenv init - | psub)
+end
 
 ## ag (searcher tool), Ack.vim based on Ag.
-set -gx AG /usr/local/ag
-set -gx PATH $AG/bin $PATH
+if test (command -s ag)
+  set -gx AG /usr/local/ag
+  set -gx PATH $AG/bin $PATH
+end
 
 ## Fzf remove duplicate history
 # set -g hist_ignore_dups
@@ -48,10 +51,10 @@ set -gx PATH $AG/bin $PATH
 # set -gx CC /usr/bin/clang
 # set -gx CXX /usr/bin/clang++
 
-## Java environment
-set -gx JAVA_HOME /usr/local/jdk1.8
-set -gx PATH $JAVA_HOME/bin $PATH
+## Java development environment.
+# set -gx JAVA_HOME /usr/local/jdk1.8
+# set -gx PATH $JAVA_HOME/bin $PATH
 
-# set CDPATH for autocomplete when his tab.
-# It's kind of vexing when different directories have same names.
+## set CDPATH for autocomplete when his tab.
+# It's vexing when different directories have same names.
 # set -g CDPATH . ~/workspace

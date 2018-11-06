@@ -345,7 +345,7 @@
     autocmd FileType nerdtree setlocal relativenumber
   augroup END
 
-  " NERDTress File highlighting
+  " NERDTree file highlighting accoring to file extension.
   " function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
   "  exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
   "  exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
@@ -547,6 +547,7 @@
   "
   "   ag foo -G bar
   "     find 'foo' in files with a name matching 'bar'
+  "     use `Ack! test %`, search 'test' in current file.
   "
   "   ag -g bar
   "     find files with a name matching 'foo'
@@ -571,7 +572,7 @@
   " q    to close the quickfix window
 
   " Use ag command.
-  let g:ackprg = '/usr/local/ag/bin/ag --vimgrep'
+  let g:ackprg = '/usr/bin/ag --vimgrep'
 
   cnoreabbrev Ack Ack!
   nnoremap <leader>a :Ack!<space>
