@@ -36,12 +36,6 @@ if test (command -s pyenv)
   source (pyenv init - | psub)
 end
 
-## ag (searcher tool), Ack.vim based on Ag.
-if test (command -s ag)
-  set -gx AG /usr/local/ag
-  set -gx PATH $AG/bin $PATH
-end
-
 ## Fzf remove duplicate history
 # set -g hist_ignore_dups
 # set -x FZF_DEFAULT_COMMAND "ag -g \"\""

@@ -36,20 +36,48 @@ push()
   git push origin master
 }
 
+recover()
+{
+  DEST_DIR="/home/pingsoli"
+
+  if [ ! -d "$DEST_DIR" ]; then
+    mkdir "$DEST_DIR"
+  fi
+
+  cp -r ".vim" "$DEST_DIR"
+  cp ".tmux.conf" "$DEST_DIR"
+  cp -r ".config" "$DEST_DIR"
+}
+
+help()
+{
+  echo -e "Usage: "
+  echo -e "  $0             backup all useful dotfiles"
+  echo -e "  $0 push <msg>  backup and push to remote master branch"
+  echo -e "  $0 recover     copy files of current directory to specific location"
+  echo -e "  $0 help        show mannual"
+}
+
 case "$1" in
   push)
     backup
 
     if [ "$#" -ne 2 ]; then
-      echo -e "no commit message\nusage: ./config.sh push <msg> [branch]"
+      echo -e "no commit message\nusage: ./backup push <msg>"
       exit 1
     fi
+
     push "$2"
+    ;;
+
+  recover)
+    recover
+    ;;
+
+  help|h)
+    help
     ;;
 
   *)
     backup
-
-    # prompt with red color
-    echo -e "\e[31mplease push all settings to remote branch: ./backup push <msg>"
 esac
