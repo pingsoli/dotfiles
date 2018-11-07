@@ -51,11 +51,11 @@ recover()
 
 help()
 {
-  echo -e "Usage: "
+  echo -e "\nUsage: "
   echo -e "  $0             backup all useful dotfiles"
   echo -e "  $0 push <msg>  backup and push to remote master branch"
   echo -e "  $0 recover     copy files of current directory to specific location"
-  echo -e "  $0 help        show mannual"
+  echo -e "  $0 help        show manual"
 }
 
 case "$1" in
@@ -80,4 +80,5 @@ case "$1" in
 
   *)
     backup
+    help
 esac
