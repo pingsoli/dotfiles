@@ -22,11 +22,11 @@ flags = [
 
   #'-x', 'c',
 
-  '-isystem', '/usr/include/c++/5.4.0',
+  '-isystem', '/usr/include/c++/7',
+  '-isystem', '/usr/include',
   #  '-isystem', '/usr/local/boost/include',
 
   #  '-isystem', '/usr/include/x86_64-linux-gnu',
-  #  '-isystem', '/usr/include',
 ]
 
 
@@ -43,7 +43,8 @@ if os.path.exists( compilation_database_folder ):
 else:
   database = None
 
-SOURCE_EXTENSIONS = [ '.cpp', '.cxx', '.cc', '.c', '.m', '.mm' ]
+# SOURCE_EXTENSIONS = [ '.cpp', '.cxx', '.cc', '.c', '.m', '.mm' ]
+SOURCE_EXTENSIONS = [ '.cpp', '.cc', '.c' ]
 
 def DirectoryOfThisScript():
   return os.path.dirname( os.path.abspath( __file__ ) )

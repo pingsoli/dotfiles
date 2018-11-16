@@ -1,5 +1,6 @@
 "{{{ vim-plug plugin (vim plugins manager, better than Vundle)
   " Check vim-plug whether installed properly.
+  " NOTE: required curl preinstalled.
   if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
           \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -72,6 +73,8 @@
 
   " Show the trail whitespace, show tab specially.
   set list listchars=tab:>-,trail:•
+
+  set autochdir          " Auto change directory according current file.
 
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   " Indent settings
@@ -314,8 +317,7 @@
 "}}} --- general settings
 
 "{{{ nerdtree plugin
-  " Show directory tree and locate to the current file(underline may not under
-  " the cusor).
+  " Show directory tree and locate to the current opened file.
   nnoremap <silent> <Leader>w :NERDTreeToggle<CR><C-w>=<CR>
   nnoremap <silent> <Leader>l :NERDTreeFind<CR><C-w>=<CR>
 
@@ -345,7 +347,7 @@
     autocmd FileType nerdtree setlocal relativenumber
   augroup END
 
-  " NERDTree file highlighting accoring to file extension.
+  " NERDTree file highlighting according to file extension.
   " function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
   "  exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
   "  exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
@@ -519,9 +521,12 @@
 "}}} --- youcompleteme
 
 "{{{ ultisnips plugin (autocomplete some snippets)
+  " :UltiSnipsEdit to edit your own ultisnips.
+
+  " All UltiSnips location.
   let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
 
-  " If you want :UltiSnipsEdit to split your window.
+  " Open UltiSnips window vertically.
   let g:UltiSnipsEditSplit="vertical"
 
   " Trigger configuration. Do not use <tab> if you use YouCompleteMe.

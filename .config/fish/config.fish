@@ -1,4 +1,4 @@
-# Aliases for all shelles
+# Quick cds
 alias ..="cd .."
 alias .1="cd .."
 alias .2="cd ../.."
@@ -7,10 +7,10 @@ alias .4="cd ../../../.."
 alias .5="cd ../../../../.."
 alias .6="cd ../../../../../.."
 
-# Tmux 256 color-mode
+# Force tmux using 256 color-mode
 alias tmux="tmux -2"
 
-# Typo aliases
+# Typos
 alias cmaek="cmake"
 alias cmeak="cmake"
 alias cmkae="cmake"
@@ -23,23 +23,23 @@ alias amke="make"
 alias mkae="make"
 alias mak="make"
 alias kmae="make"
-alias sl="ls"
+#alias sl="ls" # I love the running train, disable it.
 alias s="ls"
 
 set -gx FISH_PATH $HOME/.config/fish
 
 set fish_greeting
 
-## pyenv (python version manager)
-if test (command -s pyenv)
+if type -q "pyenv"
+  ## pyenv (python version manager)
   set -gx PATH $HOME/.pyenv/bin $PATH
   source (pyenv init - | psub)
 end
 
-## Fzf remove duplicate history
-# set -g hist_ignore_dups
-# set -x FZF_DEFAULT_COMMAND "ag -g \"\""
-# set -x FZF_CTRL_T_COMMAND "ag -g \"\""
+if type -q "fzf"
+  ## Remove fzf duplicate history
+  set -g hist_ignore_dups
+end
 
 ## Set clang as default compiler.
 # set -gx CC /usr/bin/clang
