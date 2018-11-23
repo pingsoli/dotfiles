@@ -16,11 +16,6 @@ function fish_user_key_bindings
     # end
     # bind \cb fzf-bcd-widget
 
-    # Rebind fzf default key bindings
-    bind \cf fzf-file-widget
-    bind \ch fzf-history-widget
-    bind \co fzf-cd-widget
-
     # Remove fzf default key bindings
     bind --erase \ct
     bind --erase \cr
@@ -29,8 +24,13 @@ function fish_user_key_bindings
     bind --erase \cr -M insert
     bind --erase \ec -M insert
 
-    # Unbind default `\n` to fzf-cd-widget
-    # bind \n execute
+    # Rebind \b to disable fzf manipulate the key bindings
+    # bind \b backward-delete-char
+
+    # Rebind fzf default key bindings
+    bind \cf fzf-file-widget
+    bind \cr fzf-history-widget
+    bind \co fzf-cd-widget
 
   end
 
