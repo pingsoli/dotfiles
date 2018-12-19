@@ -1,3 +1,8 @@
+# Fish shell notes
+#
+# For loop
+# for x in (seq 5); touch 1.txt; end
+
 # Quick cds
 alias ..="cd .."
 alias .1="cd .."
@@ -23,8 +28,10 @@ alias amke="make"
 alias mkae="make"
 alias mak="make"
 alias kmae="make"
-#alias sl="ls" # I love the running train, disable it.
+
+alias sl="ls"
 alias s="ls"
+alias l="ls"
 
 set -gx FISH_PATH $HOME/.config/fish
 
@@ -38,7 +45,9 @@ end
 
 if type -q "fzf"
   ## Remove fzf duplicate history
-  set -g hist_ignore_dups
+  # set -g hist_ignore_dups
+  # set -gx FZF_DEFAULT_COMMAND "command ag -g ''"
+  # set -gx FZF_FIND_FILE_COMMAND "ag --hidden --ignore .git -g \"\""
 end
 
 ## Set clang as default compiler.
