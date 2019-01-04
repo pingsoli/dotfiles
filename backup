@@ -44,6 +44,7 @@ recover()
     mkdir "$DEST_DIR"
   fi
 
+  cp ".vimrc" "$DEST_DIR"
   cp -r ".vim" "$DEST_DIR"
   cp ".tmux.conf" "$DEST_DIR"
   cp -r ".config" "$DEST_DIR"
@@ -52,14 +53,18 @@ recover()
 help()
 {
   echo -e "\nUsage: "
-  echo -e "  $0             backup all useful dotfiles"
-  echo -e "  $0 push <msg>  backup and push to remote master branch"
-  echo -e "  $0 recover     copy files of current directory to specific location"
-  echo -e "  $0 help        show manual"
+  echo -e "  $0 <start|s>       backup all useful dotfiles"
+  echo -e "  $0 <push|p> <msg>  backup and push to remote master branch"
+  echo -e "  $0 <recover|r>     copy files of current directory to specific location"
+  echo -e "  $0 <help|h>        show manual"
 }
 
 case "$1" in
-  push)
+  start|s)
+    backup
+    ;;
+
+  push|p)
     backup
 
     if [ "$#" -ne 2 ]; then
@@ -70,7 +75,7 @@ case "$1" in
     push "$2"
     ;;
 
-  recover)
+  recover|r)
     recover
     ;;
 
@@ -79,6 +84,5 @@ case "$1" in
     ;;
 
   *)
-    backup
     help
 esac

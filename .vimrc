@@ -30,7 +30,8 @@
 
     " Auto-completion.
     Plug 'Valloric/YouCompleteMe'
-    " Auto-completion for code snippets, based on YCM.
+    " Auto-completion for code snippets. NOTE: must install YCM before using
+    " UltiSnips.
     Plug 'SirVer/ultisnips'
 
     " Align based on specific characters.
