@@ -16,6 +16,10 @@ function fish_user_key_bindings
     # end
     # bind \cb fzf-bcd-widget
 
+   function fs -d "Switch tmux session"
+      tmux list-sessions -F "#{session_name}" | fzf | read -l result; and tmux switch-client -t "$result"
+    end
+
     # Remove fzf default key bindings
     bind --erase \ct
     bind --erase \cr
@@ -31,6 +35,8 @@ function fish_user_key_bindings
     bind \cf fzf-file-widget
     bind \cr fzf-history-widget
     bind \co fzf-cd-widget
+
+    bind \ct fs
 
   end
 

@@ -29,7 +29,7 @@
     Plug 'mileszs/ack.vim'
 
     " Auto-completion.
-    Plug 'Valloric/YouCompleteMe'
+    Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
     " Auto-completion for code snippets. NOTE: must install YCM before using
     " UltiSnips.
     Plug 'SirVer/ultisnips'
@@ -292,8 +292,9 @@
   " Reload ~/.vimrc without quit vim. (Global Source Vim confiure file)
   nnoremap gsv :source $MYVIMRC<CR>
 
-  " Load ctags recursively.
-  set tags=tags;
+  " Load ctags recursively. check current folder for tags file and keep going
+  " one directory up all the way to the root folder.
+  set tags=tags;/
 
   " Man page in vim. (Because the 'K' key has been mapped)
   " runtime! ftplugin/man.vim
