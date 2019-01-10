@@ -1,29 +1,50 @@
 #!/bin/bash
 
-VIM_CONF="$HOME/.vimrc"
-VIM_SNIPPETS="$HOME/.vim/UltiSnips"
-YCM_CONF="$HOME/.vim/.ycm_extra_conf.py"
+MY_NAME="pingsoli"
+MY_HOME="/home/$MY_NAME"
 
-TMUX_CONF="$HOME/.tmux.conf"
-FISH_CONF="$HOME/.config/fish"
+SRC_VIM_CONF="$MY_HOME/.vimrc"
+SRC_VIM_SNIPPETS_DIR="$MY_HOME/.vim/UltiSnips"
+SRC_YCM_CONF="$MY_HOME/.vim/.ycm_extra_conf.py"
+
+SRC_TMUX_CONF="$MY_HOME/.tmux.conf"
+SRC_FISH_CONF_DIR="$MY_HOME/.config/fish"
+
+DST_VIM_DIR="./vim"
+DST_TMUX_DIR="./tmux"
+DST_FISH_DIR="./fish"
+
+create_if_nonexist()
+{
+  for dir in "$@"; do
+   if [ ! -d "$dir" ]; then
+     echo "Creating $dir_name..."
+     mkdir -p "$dir"
+   fi
+  done
+}
 
 backup()
 {
-  if [ ! -e ".vim/plugin" ]; then
-    mkdir .config/
-    mkdir -p .vim/plugin/
-  fi
+  local wanted_dirs=($DST_VIM_DIR $DST_TMUX_DIR $DST_FISH_DIR)
+  for dir_name in ${wanted_dirs[@]}; do
+    create_if_nonexist $dir_name
+  done
 
   # Show all executing command
   set -x
 
-  cp -r "$FISH_CONF"    ".config"
-  cp    "$TMUX_CONF"    "."
+  # Fish
+  cp -r "$SRC_FISH_CONF_DIR/"*  "$DST_FISH_DIR"
 
-  # VIM
-  cp    "$VIM_CONF"     "."
-  cp    "$YCM_CONF"     ".vim"
-  cp -r "$VIM_SNIPPETS" ".vim"
+  # Tmux
+  cp    "$SRC_TMUX_CONF"        "$DST_TMUX_DIR"
+
+  # Vim
+  cp    "$SRC_VIM_CONF"         "$DST_VIM_DIR"
+  mkdir -p "$DST_VIM_DIR/.vim/UltiSnips" && \
+  cp -r "$SRC_VIM_SNIPPETS_DIR/"* "$DST_VIM_DIR/.vim/UltiSnips"
+  cp    "$SRC_YCM_CONF"           "$DST_VIM_DIR/.vim"
 
   # set +x not echo
   { set +x; } 2>/dev/null
@@ -38,16 +59,21 @@ push()
 
 recover()
 {
-  DEST_DIR="/home/pingsoli"
+  local wanted_dirs=($MY_HOME/.config $MY_HOME/.vim)
+  for dir_name in ${wanted_dirs[@]}; do
+    create_if_nonexist $dir_name
+  done
 
-  if [ ! -d "$DEST_DIR" ]; then
-    mkdir "$DEST_DIR"
-  fi
+  # Show all executing command
+  set -x
 
-  cp ".vimrc" "$DEST_DIR"
-  cp -r ".vim" "$DEST_DIR"
-  cp ".tmux.conf" "$DEST_DIR"
-  cp -r ".config" "$DEST_DIR"
+  cp "./vim/.vimrc" "$MY_HOME"
+  cp -r "./vim/.vim" "$MY_HOME"
+  cp "./tmux/.tmux.conf" "$MY_HOME"
+  cp -r "./fish" "$MY_HOME/.config"
+
+  # set +x not echo
+  { set +x; } 2>/dev/null
 }
 
 help()
@@ -55,7 +81,7 @@ help()
   echo -e "\nUsage: "
   echo -e "  $0 <start|s>       backup all useful dotfiles"
   echo -e "  $0 <push|p> <msg>  backup and push to remote master branch"
-  echo -e "  $0 <recover|r>     copy files of current directory to specific location"
+  echo -e "  $0 <recover|r>     copy files to specific location and overwrite it"
   echo -e "  $0 <help|h>        show manual"
 }
 

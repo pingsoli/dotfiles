@@ -447,19 +447,24 @@
   let g:airline_symbols.linenr = ''
 "}}} --- vim-airline
 
+"{{{ tmuxline (beauty status bar)
+  " #S - Seesion name
+  " #I - Current window index
+  " #W - Current window name
+  let g:tmuxline_preset = {
+    \ 'a': '#S',
+    \ 'win' : ['#I', '#W'],
+    \ 'cwin': ['#I', '#W'],
+    \ }
+
+"}}} --- tmuxline
+"
 "{{{ highlight for cpp syntax
   let g:cpp_class_scope_highlight                  = 1
   let g:cpp_member_variable_highlight              = 1
   let g:cpp_class_decl_highlight                   = 1
   let g:cpp_experimental_simple_template_highlight = 1
 "}}} --- highlight-cpp
-
-"{{{ tmuxline (beauty status bar)
-  let g:tmuxline_preset = {
-    \'win'  : ['#I', '#W'],
-    \'cwin' : ['#I', '#W', '#F'],
-    \ }
-"}}} --- tmuxline
 
 "{{{ vim-easy-align plugin
   " gaip + <space>   left alignment according to the first whitespace
