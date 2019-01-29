@@ -2,7 +2,7 @@ function fish_user_key_bindings
 
   # Tips: search key bindings use `fish_key_reader` command in fish.
   #
-  # NOTE: make sure C-J bind nothing, or Enter and C-J will do the same thing.
+  # NOTE: make sure C-J binds nothing, or Enter and C-J will do the same thing.
   # When you press Enter and C-J will be triggered.
 
   if type -q "fzf"
@@ -16,8 +16,12 @@ function fish_user_key_bindings
     # end
     # bind \cb fzf-bcd-widget
 
-   function fs -d "Switch tmux session"
-      tmux list-sessions -F "#{session_name}" | fzf | read -l result; and tmux switch-client -t "$result"
+    function fs -d "Switch or attach to tmux session"
+      if test -n "$TMUX"
+        tmux list-sessions -F "#{session_name}" | fzf | read -l result; and tmux switch-client -t "$result"
+      else
+        tmux list-sessions -F "#{session_name}" | fzf | read -l result; and tmux attach -t "$result"
+      end
     end
 
     # Remove fzf default key bindings

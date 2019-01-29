@@ -1,8 +1,3 @@
-# Fish shell notes
-#
-# For loop
-# for x in (seq 5); touch 1.txt; end
-
 # Quick cds
 alias ..="cd .."
 alias .1="cd .."
@@ -11,9 +6,6 @@ alias .3="cd ../../.."
 alias .4="cd ../../../.."
 alias .5="cd ../../../../.."
 alias .6="cd ../../../../../.."
-
-# Force tmux using 256 color-mode
-alias tmux="tmux -2"
 
 # Typos
 alias cmaek="cmake"
@@ -48,6 +40,12 @@ if type -q "fzf"
   # set -g hist_ignore_dups
   # set -gx FZF_DEFAULT_COMMAND "command ag -g ''"
   # set -gx FZF_FIND_FILE_COMMAND "ag --hidden --ignore .git -g \"\""
+end
+
+if type -q "tmux"
+  # Force tmux using 256 color-mode
+  alias tmux="tmux -2"
+  alias ta="tmux attach"
 end
 
 ## Set clang as default compiler.
