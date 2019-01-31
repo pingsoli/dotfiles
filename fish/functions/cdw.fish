@@ -1,11 +1,5 @@
-set -gx MY_WORKSPACE $HOME/workspace
+#!/usr/bin/env fish
 
-function cdw --description 'Change directory quickly'
-  if test -e "$MY_WORKSPACE/$argv"
-    cd "$MY_WORKSPACE/$argv"
-  else
-    set_color red
-    echo "ERROR: $MY_WORKSPACE/$argv directory not exists"
-    set_color normal
-  end
+function cdw --description "Change to my workspace quickly"
+  cd "$MY_WORKSPACE/$argv"
 end

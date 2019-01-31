@@ -18,19 +18,13 @@ create_if_nonexist()
 {
   for dir in "$@"; do
    if [ ! -d "$dir" ]; then
-     echo "Creating $dir_name..."
      mkdir -p "$dir"
    fi
   done
 }
 
-backup()
+backup_necessary_files()
 {
-  local wanted_dirs=($DST_VIM_DIR $DST_TMUX_DIR $DST_FISH_DIR)
-  for dir_name in ${wanted_dirs[@]}; do
-    create_if_nonexist $dir_name
-  done
-
   # Show all executing command
   set -x
 
@@ -48,6 +42,23 @@ backup()
 
   # set +x not echo
   { set +x; } 2>/dev/null
+}
+
+backup()
+{
+  local wanted_dirs=($DST_VIM_DIR $DST_TMUX_DIR $DST_FISH_DIR)
+
+  # Remove all backup
+  for dir_name in ${wanted_dirs[@]}; do
+     rm -rf "$dir_name" 2> /dev/null
+  done
+
+  # Create necessary folders
+  for dir_name in ${wanted_dirs[@]}; do
+    create_if_nonexist $dir_name
+  done
+
+  backup_necessary_files
 }
 
 push()
@@ -79,10 +90,10 @@ recover()
 help()
 {
   echo -e "\nUsage: "
-  echo -e "  $0 <start|s>       backup all useful dotfiles"
-  echo -e "  $0 <push|p> <msg>  backup and push to remote master branch"
-  echo -e "  $0 <recover|r>     copy files to specific location and overwrite it"
-  echo -e "  $0 <help|h>        show manual"
+  echo -e "  $0 [start|s]      \t backup all useful dotfiles"
+  echo -e "  $0 [push|p <msg>] \t backup and push to remote master branch"
+  echo -e "  $0 [recover|r]    \t copy files to specific location and overwrite it"
+  echo -e "  $0 [help|h]       \t show manual"
 }
 
 case "$1" in

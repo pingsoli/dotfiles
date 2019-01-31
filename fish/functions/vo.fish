@@ -1,3 +1,5 @@
+#!/usr/bin/env fish
+
 function vo -d "vim open vim|fish|tmux|ycm conf file with horizontal layout"
 
   if not count $argv > /dev/null
@@ -9,20 +11,20 @@ function vo -d "vim open vim|fish|tmux|ycm conf file with horizontal layout"
 
   set -l openfiles
   for option in $argv
-    switch $option
-      case vi vim
+    switch "$option"
+      case 'vim' 'vi'
        set -l vim_conf_file ~/.vimrc
        set openfiles $openfiles $vim_conf_file
 
-      case tmux
+      case 'tmux'
        set -l tmux_conf_file ~/.tmux.conf
        set openfiles $openfiles $tmux_conf_file
 
-      case fish
+      case 'fish'
        set -l fish_conf_file ~/.config/fish/config.fish
        set openfiles $openfiles $fish_conf_file
 
-      case ycm
+      case 'ycm'
         set -l ycm_conf_file ~/.vim/.ycm_extra_conf.py
 
         if test -e "$ycm_conf_file"
@@ -43,4 +45,5 @@ function vo -d "vim open vim|fish|tmux|ycm conf file with horizontal layout"
 
   # Open all files with horizontal layout
   command vim -O $openfiles
+
 end

@@ -1,3 +1,11 @@
+#!/usr/bin/env fish
+
+set -g FISH_PATH $HOME/.config/fish
+set -g MY_WORKSPACE $HOME/workspace
+
+# Remove fish shell greeting message
+set fish_greeting
+
 # Quick cds
 alias ..="cd .."
 alias .1="cd .."
@@ -6,6 +14,7 @@ alias .3="cd ../../.."
 alias .4="cd ../../../.."
 alias .5="cd ../../../../.."
 alias .6="cd ../../../../../.."
+alias .6="cd ../../../../../../.."
 
 # Typos
 alias cmaek="cmake"
@@ -20,14 +29,14 @@ alias amke="make"
 alias mkae="make"
 alias mak="make"
 alias kmae="make"
-
 alias sl="ls"
 alias s="ls"
 alias l="ls"
 
-set -gx FISH_PATH $HOME/.config/fish
-
-set fish_greeting
+# Abbrs
+abbr cdfish="cd $FISH_PATH"
+abbr cdff="cd $FISH_PATH/functions"
+abbr sfish="source $FISH_PATH/config.fish"
 
 if type -q "pyenv"
   ## pyenv (python version manager)
@@ -35,17 +44,10 @@ if type -q "pyenv"
   source (pyenv init - | psub)
 end
 
-if type -q "fzf"
-  ## Remove fzf duplicate history
-  # set -g hist_ignore_dups
-  # set -gx FZF_DEFAULT_COMMAND "command ag -g ''"
-  # set -gx FZF_FIND_FILE_COMMAND "ag --hidden --ignore .git -g \"\""
-end
-
 if type -q "tmux"
   # Force tmux using 256 color-mode
   alias tmux="tmux -2"
-  alias ta="tmux attach"
+  abbr ta="tmux attach"
 end
 
 ## Set clang as default compiler.

@@ -18,13 +18,13 @@ function fish_user_key_bindings
 
     function fs -d "Switch or attach to tmux session"
       if test -n "$TMUX"
-        tmux list-sessions -F "#{session_name}" | fzf | read -l result; and tmux switch-client -t "$result"
+        tmux list-sessions -F "#{session_name}" | fzf --reverse | read -l result; and tmux switch-client -t "$result"
       else
-        tmux list-sessions -F "#{session_name}" | fzf | read -l result; and tmux attach -t "$result"
+        tmux list-sessions -F "#{session_name}" | fzf --reverse | read -l result; and tmux attach -t "$result"
       end
     end
 
-    # Remove fzf default key bindings
+    # Remove default fzf key bindings
     bind --erase \ct
     bind --erase \cr
     bind --erase \ec
