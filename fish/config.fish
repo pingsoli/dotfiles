@@ -47,7 +47,10 @@ end
 if type -q "tmux"
   # Force tmux using 256 color-mode
   alias tmux="tmux -2"
-  abbr ta="tmux attach"
+end
+
+if type -q "thefuck"
+  thefuck --alias | source
 end
 
 ## Set clang as default compiler.
