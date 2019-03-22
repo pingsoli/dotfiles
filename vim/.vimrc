@@ -504,6 +504,7 @@
     \ }
 
   nnoremap ;f :LeaderfFunction<CR>
+  nnoremap ;l :LeaderfLine<CR>
 "}}} --- leaderf
 
 "{{{ youcompleteme plugin (autocomplete)
@@ -674,15 +675,19 @@
   " :IHT new tab and switches
   " :IHN cycles through matches
 
+  " Open in current window
   nnoremap <silent> <leader>go  :A<CR>
   nnoremap <silent> <leader>gio :IH<CR>
 
+  " Horizontal
   nnoremap <silent> <leader>gs  :AS<CR>
   nnoremap <silent> <leader>gis :IHS<CR>
 
+  " Vertical
   nnoremap <silent> <leader>gv  :AV<CR>
   nnoremap <silent> <leader>giv :IHV<CR>
 
+  " Open in other tab
   nnoremap <silent> <leader>gt  :AT<CR>
   nnoremap <silent> <leader>git :IHT<CR>
 "}}} --- a.vim
