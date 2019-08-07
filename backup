@@ -28,8 +28,8 @@ backup_necessary_files()
   # Show all executing command
   set -x
 
-  # Fish
-  cp -r "$SRC_FISH_CONF_DIR/"*  "$DST_FISH_DIR"
+  # Fish, '-L' follows symbolic link to copy real file
+  cp -r -L "$SRC_FISH_CONF_DIR/"*  "$DST_FISH_DIR"
 
   # Tmux
   cp    "$SRC_TMUX_CONF"        "$DST_TMUX_DIR"
@@ -78,10 +78,12 @@ recover()
   # Show all executing command
   set -x
 
-  cp "./vim/.vimrc" "$MY_HOME"
-  cp -r "./vim/.vim" "$MY_HOME"
-  cp "./tmux/.tmux.conf" "$MY_HOME"
-  cp -r "./fish" "$MY_HOME/.config"
+  cp -u "./vim/.vimrc" "$MY_HOME"
+  cp -ru "./vim/.vim" "$MY_HOME"
+  cp -u "./tmux/.tmux.conf" "$MY_HOME"
+  # Firstly, delete all symbolic links
+  find "$MY_HOME/.config/fish" -type l -delete
+  cp -ru "./fish" "$MY_HOME/.config"
 
   # set +x not echo
   { set +x; } 2>/dev/null
@@ -90,10 +92,10 @@ recover()
 help()
 {
   echo -e "\nUsage: "
-  echo -e "  $0 [start|s]      \t backup all useful dotfiles"
-  echo -e "  $0 [push|p <msg>] \t backup and push to remote master branch"
-  echo -e "  $0 [recover|r]    \t copy files to specific location and overwrite it"
-  echo -e "  $0 [help|h]       \t show manual"
+  echo -e "  $0 [start|s]      \t backup all necessary dotfiles"
+  echo -e "  $0 [push|p <msg>] \t backup and push to GitHub"
+  echo -e "  $0 [recover|r]    \t restore dotfiles"
+  echo -e "  $0 [help|h]       \t manual"
 }
 
 case "$1" in
