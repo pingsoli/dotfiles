@@ -94,7 +94,7 @@ help()
   echo -e "\nUsage: "
   echo -e "  $0 [start|s]      \t backup all necessary dotfiles"
   echo -e "  $0 [push|p <msg>] \t backup and push to GitHub"
-  echo -e "  $0 [recover|r]    \t restore dotfiles"
+  echo -e "  $0 [recover|r]    \t restore dotfiles to local host"
   echo -e "  $0 [help|h]       \t manual"
 }
 
